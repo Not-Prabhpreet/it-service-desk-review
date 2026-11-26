@@ -38,5 +38,6 @@
     "2016-05-31"
   ],
   "resolution_p99_hours": 2711.2,
-  "resolution_over_p99": 245
+  "resolution_over_p99": 245,
+  "repeat_7d": 4814
 }

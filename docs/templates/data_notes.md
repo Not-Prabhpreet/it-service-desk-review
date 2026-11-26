@@ -26,7 +26,8 @@ Every count on this page is printed by `src/clean.py` (`data/clean/cleaning_log.
 | 11 | **Month** = the calendar month the incident was opened. | Tickets are counted when they arrive. | — |
 | 12 | **Reporting window: incidents opened ${log_window_0} to ${log_window_1}.** | 98% of incidents were opened in March to May 2016. Outside that range there's one day of February (29 Feb) and a thin tail from June 2016 to February 2017 (5 to 94 tickets a month), which would make the monthly trends misleading. | ${log_excluded_outside_window} incidents excluded and ${log_fact_rows} kept. |
 | 13 | Long resolution times are kept, not trimmed. | They're real tickets that stayed open a long time, and trimming them would hide the problem. | 99th percentile = ${log_resolution_p99_hours} h. ${log_resolution_over_p99} tickets are above it. I report the median next to the mean for this reason. |
-| 14 | "First line" = **${first_line_group}**, the largest resolving group. | It resolves ${first_line_share}% of tickets with a median of ${first_line_median_h} h, which is the profile of a service desk. **This is an assumption**, because the data doesn't name the teams. | It's used in the root cause analysis. |
+| 14 | **Repeat ticket** = the same caller raised a ticket in the same category within the previous 7 days. | It shows recurring demand that reopen counts miss. | ${log_repeat_7d} incidents flagged. |
+| 15 | "First line" = **${first_line_group}**, the largest resolving group. | It resolves ${first_line_share}% of tickets with a median of ${first_line_median_h} h, which is the profile of a service desk. **This is an assumption**, because the data doesn't name the teams. | It's used in the root cause analysis. |
 
 ## Things to keep in mind when reading the numbers
 

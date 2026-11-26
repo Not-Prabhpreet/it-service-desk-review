@@ -11,6 +11,7 @@
     "reassign_rate": 45.7,
     "avg_reassign": 0.94,
     "reopen_rate": 1.1,
+    "repeat_rate": 19.7,
     "moderate_share": 94.3,
     "window_label": "Mar 2016 - May 2016"
   },
@@ -299,6 +300,8 @@
     "breached_hours_pm": 239290,
     "reassign_rate": 44.3,
     "reassign_rate_rest": 45.8,
+    "repeat_rate": 29.5,
+    "repeat_rate_rest": 18.6,
     "reopen_rate": 0.62,
     "reopen_rate_rest": 1.15,
     "groups_touched_avg": 1.65,

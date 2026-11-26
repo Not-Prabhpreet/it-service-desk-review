@@ -71,6 +71,7 @@ def main():
         p90_res_h=r(f.resolution_hours.quantile(.9)),
         reassign_rate=r(100 * f.is_reassigned.mean()), avg_reassign=r(f.reassignment_count.mean(), 2),
         reopen_rate=r(100 * f.is_reopened.mean()),
+        repeat_rate=r(100 * (f.repeat_7d == "Yes").mean()),
         moderate_share=r(100 * (f.priority == "3 - Moderate").mean()),
         window_label=f"{MONTHS_LABEL[months[0]]} - {MONTHS_LABEL[months[-1]]}",
     )
@@ -204,6 +205,7 @@ def main():
         hours_total=r(c.resolution_hours.sum(), 0), hours_share=r(100 * c.resolution_hours.sum() / f.resolution_hours.sum()),
         breached_hours_pm=r(c[c.breach].resolution_hours.sum() / per_month, 0),
         reassign_rate=r(100 * c.is_reassigned.mean()), reassign_rate_rest=r(100 * rest.is_reassigned.mean()),
+        repeat_rate=r(100 * (c.repeat_7d == "Yes").mean()), repeat_rate_rest=r(100 * (rest.repeat_7d == "Yes").mean()),
         reopen_rate=r(100 * c.is_reopened.mean(), 2), reopen_rate_rest=r(100 * rest.is_reopened.mean(), 2),
         groups_touched_avg=r(c.groups_touched.mean(), 2), groups_touched_rest=r(rest.groups_touched.mean(), 2),
         resolver_groups=int(c.assignment_group.nunique()),
@@ -230,6 +232,17 @@ def main():
         proj_hours_saved_pm=r(hours_saved, -2), proj_breaches_avoided_pm=r(breaches_avoided, 0),
         proj_cat_breach_rate=r(new_cat_breach_rate), proj_overall_sla=r(new_overall_sla),
     )
+
+    # Before/after table for the Power BI Problem Review page
+    sc = m["problem_scenario_fl"]
+    pd.DataFrame([
+        ("First-line resolution %", 1, m["problem"]["first_line_share"], sc["target_share"]),
+        ("Breach rate %", 2, m["problem"]["breach_rate"], sc["new_cat_breach_rate"]),
+        ("Breaches per month", 3, m["problem"]["breaches_pm"], m["problem"]["breaches_pm"] - sc["breaches_avoided_pm"]),
+        ("Desk SLA met %", 4, m["overall"]["sla_pct"], sc["new_overall_sla"]),
+    ], columns=["metric", "metric_sort", "before", "after"]).to_csv(CLEAN_DIR / "problem_projection.csv", index=False)
+    (CLEAN_DIR / "problem_config.csv").write_text(
+        f"problem_category,first_line_group\n{pc},{first_line}\n")
 
     # ---- Figures ----
     labels = [MONTHS_LABEL[k] for k in mo.index]

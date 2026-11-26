@@ -1,0 +1,5 @@
+metric,metric_sort,before,after
+First-line resolution %,1,14.1,40.8
+Breach rate %,2,51.6,42.3
+Breaches per month,3,418.0,343.0
+Desk SLA met %,4,63.4,64.3

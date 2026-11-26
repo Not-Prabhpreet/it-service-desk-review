@@ -79,6 +79,7 @@ def main():
     f["assignment_group"] = last["assignment_group"].fillna("Not recorded")
     f["first_assignment_group"] = first_group.reindex(f.index).fillna("Not recorded")
     f["groups_touched"] = n_groups.reindex(f.index).fillna(0).astype(int)
+    f["caller_id"] = last["caller_id"].fillna("Unknown")
     f["contact_type"] = last["contact_type"]
     f["location"] = last["location"].fillna("Unknown")
     f["knowledge_used"] = np.where(last["knowledge"], "Yes", "No")
@@ -118,6 +119,22 @@ def main():
     log["resolution_p99_hours"] = round(float(p99), 1)
     log["resolution_over_p99"] = int((f["resolution_hours"] > p99).sum())
 
+    # Repeat ticket: same caller raised a ticket in the same category in the previous 7 days.
+    f = f.sort_values(["caller_id", "category", "opened_at"])
+    prev = f.groupby(["caller_id", "category"])["opened_at"].shift()
+    rep = (f["opened_at"] - prev <= pd.Timedelta(days=7)) & (f["caller_id"] != "Unknown")
+    f["repeat_7d"] = np.where(rep, "Yes", "No")
+    log["repeat_7d"] = int(rep.sum())
+    f = f.sort_index()
+
+    # Resolution-time buckets for the distribution chart
+    bins = [-0.001, 1, 4, 24, 72, 168, 672, np.inf]
+    labels = ["< 1 h", "1-4 h", "4-24 h", "1-3 days", "3-7 days", "1-4 weeks", "> 4 weeks"]
+    f["resolution_bucket"] = pd.cut(f["resolution_hours"], bins=bins, labels=labels).astype(str)
+    f.loc[f["resolution_hours"].isna(), "resolution_bucket"] = "No resolve time"
+    f["resolution_bucket_sort"] = f["resolution_bucket"].map(
+        {l: i for i, l in enumerate(labels + ["No resolve time"], start=1)})
+
     f = f.reset_index().rename(columns={"number": "incident_id"})
     f["priority_sort"] = f["priority"].map(PRIORITY_ORDER)
     for c in ["opened_at", "resolved_at", "closed_at"]:
@@ -128,8 +145,8 @@ def main():
     f.to_csv(CLEAN_DIR / "fact_incident.csv", index=False)
 
     # Dimensions
-    last_day = pd.to_datetime(f["resolved_date"]).max()
-    dates = pd.date_range(WINDOW_START, max(last_day, pd.Timestamp(WINDOW_END)), freq="D")
+    # Calendar covers the reporting window only (resolve dates after it simply don't match a row).
+    dates = pd.date_range(WINDOW_START, WINDOW_END, freq="D")
     dd = pd.DataFrame({"date": dates})
     dd["year"] = dd.date.dt.year
     dd["month"] = dd.date.dt.strftime("%Y-%m")
@@ -137,7 +154,7 @@ def main():
     dd["month_start"] = dd.date.dt.to_period("M").dt.start_time
     dd["week_start"] = dd.date - pd.to_timedelta(dd.date.dt.day_of_week, unit="D")
     dd["weekday"] = dd.date.dt.strftime("%a")
-    dd["in_window"] = np.where(dd.date <= WINDOW_END, "Yes", "No")
+    dd["month_sort"] = dd.date.dt.year * 100 + dd.date.dt.month
     for c in ["date", "month_start", "week_start"]:
         dd[c] = dd[c].dt.strftime("%Y-%m-%d")
     dd.to_csv(CLEAN_DIR / "dim_date.csv", index=False)
