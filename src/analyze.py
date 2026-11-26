@@ -25,7 +25,9 @@ def load():
 
 
 def r(x, n=1):
-    return None if pd.isna(x) else round(float(x), n)
+    if pd.isna(x):
+        return None
+    return int(round(float(x), n)) if n <= 0 else round(float(x), n)
 
 
 def backlog_daily(f):
@@ -162,7 +164,8 @@ def main():
     ).sort_values("n", ascending=False)
     sub = c.subcategory.value_counts()
     cm = c.groupby("month").agg(n=("incident_id", "size"), br=("breach", "mean"),
-                                reass=("is_reassigned", "mean"))
+                                reass=("is_reassigned", "mean"),
+                                fl=("assignment_group", lambda s: (s == first_line).mean()))
     # Scenario A (primary): bring first-line resolution of this category up to the rest-of-desk rate.
     at_fl = c[c.assignment_group == first_line]
     not_fl = c[(c.assignment_group != first_line) & (c.assignment_group != "Not recorded")]
@@ -179,6 +182,17 @@ def main():
         hours_saved_pm=r(shift_pm * fl_delta_h, -2), breaches_avoided_pm=r(fl_breaches_avoided, 0),
         new_cat_breach_rate=r(100 * (cb / per_month - fl_breaches_avoided) / (cn / per_month))
         , new_overall_sla=r(100 * (1 - (B / per_month - fl_breaches_avoided) / (N / per_month))),
+    )
+    lm = months[-1]
+    lm_br = 100 * cm.loc[lm, "br"]
+    lm_desk_sla = 100 * (1 - f[f.month == lm].breach.mean())
+    sc = m["problem_scenario_fl"]
+    m["latest"] = dict(
+        label=MONTHS_LABEL[lm], desk_sla_pct=r(lm_desk_sla), desk_breach_rate=r(100 - lm_desk_sla),
+        problem_breach_rate=r(lm_br), problem_first_line_share=r(100 * cm.loc[lm, "fl"]),
+        # targets keep the scenario's relative improvement, applied to the latest month
+        target_problem_breach_rate=r(lm_br * sc["new_cat_breach_rate"] / (100 * cb / cn)),
+        target_desk_sla_pct=r(lm_desk_sla + sc["new_overall_sla"] - 100 * (1 - B / N)),
     )
     m["problem"] = dict(
         excess_wait_hours_pm=r(excess, -2),
@@ -208,7 +222,8 @@ def main():
         groups=[dict(group=k, tickets=int(v.n), median_h=r(v.med), breach_rate=r(100 * v.br))
                 for k, v in cg.head(6).iterrows()],
         monthly={k: dict(label=MONTHS_LABEL[k], tickets=int(v.n), breach_rate=r(100 * v.br),
-                         reassign_rate=r(100 * v.reass)) for k, v in cm.iterrows()},
+                         reassign_rate=r(100 * v.reass), first_line_share=r(100 * v.fl))
+                 for k, v in cm.iterrows()},
         reassigned_pm=r(reassigned_pm, 0), med_h_reassigned=r(cra.loc[True, "med"]),
         med_h_not_reassigned=r(cra.loc[False, "med"]), delta_h=r(delta_h),
         breach_reassigned=r(100 * cra.loc[True, "br"]), breach_not_reassigned=r(100 * cra.loc[False, "br"]),

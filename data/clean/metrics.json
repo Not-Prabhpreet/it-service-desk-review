@@ -2,7 +2,7 @@
   "overall": {
     "tickets": 24437,
     "months": 3,
-    "tickets_per_month": 8146.0,
+    "tickets_per_month": 8146,
     "breaches": 8947,
     "sla_pct": 63.4,
     "median_res_h": 14.9,
@@ -261,33 +261,42 @@
   },
   "problem_scenario_fl": {
     "target_share": 40.8,
-    "tickets_shifted_pm": 217.0,
+    "tickets_shifted_pm": 217,
     "med_h_first_line": 0.18,
     "med_h_other": 99.8,
     "breach_first_line": 23.1,
     "breach_other": 57.8,
-    "hours_saved_pm": 21600.0,
-    "breaches_avoided_pm": 75.0,
+    "hours_saved_pm": 21600,
+    "breaches_avoided_pm": 75,
     "new_cat_breach_rate": 42.3,
     "new_overall_sla": 64.3
   },
+  "latest": {
+    "label": "May 2016",
+    "desk_sla_pct": 77.5,
+    "desk_breach_rate": 22.5,
+    "problem_breach_rate": 40.0,
+    "problem_first_line_share": 11.8,
+    "target_problem_breach_rate": 32.8,
+    "target_desk_sla_pct": 78.4
+  },
   "problem": {
-    "excess_wait_hours_pm": 243800.0,
+    "excess_wait_hours_pm": 243800,
     "category": "Category 46",
     "tickets": 2432,
-    "tickets_pm": 811.0,
+    "tickets_pm": 811,
     "share": 10.0,
     "volume_rank": 4,
     "breaches": 1254,
-    "breaches_pm": 418.0,
+    "breaches_pm": 418,
     "breach_share": 14.0,
     "breach_rate": 51.6,
     "breach_rate_rest": 35.0,
     "median_h": 54.5,
     "median_h_rest": 7.4,
-    "hours_total": 744545.0,
+    "hours_total": 744545,
     "hours_share": 18.5,
-    "breached_hours_pm": 239290.0,
+    "breached_hours_pm": 239290,
     "reassign_rate": 44.3,
     "reassign_rate_rest": 45.8,
     "reopen_rate": 0.62,
@@ -352,29 +361,32 @@
         "label": "Mar 2016",
         "tickets": 908,
         "breach_rate": 66.1,
-        "reassign_rate": 46.3
+        "reassign_rate": 46.3,
+        "first_line_share": 16.2
       },
       "2016-04": {
         "label": "Apr 2016",
         "tickets": 787,
         "breach_rate": 45.6,
-        "reassign_rate": 44.2
+        "reassign_rate": 44.2,
+        "first_line_share": 13.7
       },
       "2016-05": {
         "label": "May 2016",
         "tickets": 737,
         "breach_rate": 40.0,
-        "reassign_rate": 41.9
+        "reassign_rate": 41.9,
+        "first_line_share": 11.8
       }
     },
-    "reassigned_pm": 359.0,
+    "reassigned_pm": 359,
     "med_h_reassigned": 142.8,
     "med_h_not_reassigned": 16.8,
     "delta_h": 126.1,
     "breach_reassigned": 62.9,
     "breach_not_reassigned": 42.6,
-    "proj_hours_saved_pm": 22600.0,
-    "proj_breaches_avoided_pm": 36.0,
+    "proj_hours_saved_pm": 22600,
+    "proj_breaches_avoided_pm": 36,
     "proj_cat_breach_rate": 47.1,
     "proj_overall_sla": 63.8
   }
