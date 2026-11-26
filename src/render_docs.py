@@ -82,7 +82,32 @@ def tables(m):
     t["fastest_l2_group"], t["fastest_l2_median_h"] = fast[0]["group"], fmt(fast[0]["median_h"])
     t["slowest_l2_group"], t["slowest_l2_median_h"] = fast[-1]["group"], fmt(fast[-1]["median_h"])
     t["problem_slug"] = p["category"].lower().replace(" ", "_")
+    t.update(live_sections())
     return t
+
+
+def live_sections():
+    """'Try it' and screenshot blocks, from power-automate/live_links.json and powerbi/screenshots/."""
+    links_file = ROOT / "power-automate" / "live_links.json"
+    links = json.loads(links_file.read_text()) if links_file.exists() else {}
+    lines = []
+    if links.get("form_url"):
+        lines.append(f"- **Submit a test IT request:** [{links['form_url']}]({links['form_url']}). "
+                     "You'll get a confirmation email with your ticket ID within a minute.")
+    else:
+        lines.append("- **Live service desk:** being set up. See [power-automate/](power-automate/).")
+    if links.get("dashboard_url"):
+        lines.append(f"- **Live dashboard:** [{links['dashboard_url']}]({links['dashboard_url']})")
+    pdf = ROOT / "powerbi" / "ServiceDesk.pdf"
+    if pdf.exists():
+        lines.append("- **Dashboard PDF:** [powerbi/ServiceDesk.pdf](powerbi/ServiceDesk.pdf). Screenshots are below.")
+    shots = sorted((ROOT / "powerbi" / "screenshots").glob("*.png"))
+    if shots:
+        shot_md = "\n\n".join(f"![{s.stem.replace('_', ' ')}](powerbi/screenshots/{s.name})" for s in shots)
+    else:
+        shot_md = ("Dashboard screenshots will appear here once exported. Meanwhile, the charts in "
+                   "[docs/figures/](docs/figures/) come from the same numbers.")
+    return {"try_it": "\n".join(lines), "screenshots": shot_md}
 
 
 def main():

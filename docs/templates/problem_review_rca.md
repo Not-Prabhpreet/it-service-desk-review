@@ -5,7 +5,7 @@
 
 ## 1. Problem statement
 
-**${problem_category} is the largest single source of SLA breaches on the desk.** It makes up ${problem_share}% of tickets (the #${problem_volume_rank} category by volume) but ${problem_breach_share}% of all SLA breaches. Half of its tickets breach (${problem_breach_rate}%, against ${problem_breach_rate_rest}% for every other category). The median ticket takes ${problem_median_h} hours to resolve, against ${problem_median_h_rest} hours elsewhere. Only ${problem_first_line_share}% of these tickets are resolved by the first-line desk, compared with ${problem_first_line_share_rest}% for the rest of the workload.
+**${problem_category} is the largest single source of SLA breaches on the desk.** It makes up ${problem_share}% of tickets (the #${problem_volume_rank} category by volume) but ${problem_breach_share}% of all SLA breaches. Its breach rate is ${problem_breach_rate}%, against ${problem_breach_rate_rest}% for every other category. The median ticket takes ${problem_median_h} hours to resolve, against ${problem_median_h_rest} hours elsewhere. Only ${problem_first_line_share}% of these tickets are resolved by the first-line desk, compared with ${problem_first_line_share_rest}% for the rest of the workload.
 
 ## 2. Impact
 
@@ -61,7 +61,7 @@ The breach rate improved after March, along with the whole desk (see the data no
 |---|---|---|
 | 1. Why does ${problem_category} drive the most breaches? | Its tickets take far longer to resolve (median ${problem_median_h} h against ${problem_median_h_rest} h). | **Data** |
 | 2. Why do they take longer? | Only ${problem_first_line_share}% are fixed at first line. The rest wait in a second-line queue, where the median is ${problem_other_groups_med_h} h. | **Data** |
-| 3. Why can't first line fix them? | There's no documented fix for first line to use: knowledge is attached on ${problem_knowledge_rate}% of tickets, half the desk rate. Intake also misses information, so a third of tickets stall in "Awaiting User Info". | **Data** (rates). The claim that no first-line procedure exists is an **assumption**, to be confirmed with the desk lead. |
+| 3. Why can't first line fix them? | There's no documented fix for first line to use: knowledge is attached on ${problem_knowledge_rate}% of tickets against ${problem_knowledge_rate_rest}% for the desk. Intake also misses information, so ${problem_awaiting_user_rate}% of tickets stall in "Awaiting User Info" (desk: ${problem_awaiting_user_rate_rest}%). | **Data** (rates). The claim that no first-line procedure exists is an **assumption**, to be confirmed with the desk lead. |
 | 4. Why is there no documented fix or clear route? | Ownership is spread over ${problem_resolver_groups} resolver groups, with a ${fastest_l2_median_h} h median in the fastest (${fastest_l2_group}) and ${slowest_l2_median_h} h in the slowest (${slowest_l2_group}). Nobody owns the category end to end. | **Data** (spread). That this causes the missing knowledge is an **assumption**. |
 | 5. Why has nobody owned it? | The faults recur (problem records are linked ${problem_problem_link_rate}% of the time against ${problem_problem_link_rate_rest}% elsewhere), but the other tickets are still handled one at a time instead of being fixed at the source. | **Data** (link rates). That problem management isn't driving a permanent fix for this category is an **assumption**. |
 

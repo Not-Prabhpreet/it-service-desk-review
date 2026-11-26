@@ -5,7 +5,7 @@
 
 ## 1. Problem statement
 
-**Category 46 is the largest single source of SLA breaches on the desk.** It makes up 10.0% of tickets (the #4 category by volume) but 14.0% of all SLA breaches. Half of its tickets breach (51.6%, against 35.0% for every other category). The median ticket takes 54.5 hours to resolve, against 7.4 hours elsewhere. Only 14.1% of these tickets are resolved by the first-line desk, compared with 40.8% for the rest of the workload.
+**Category 46 is the largest single source of SLA breaches on the desk.** It makes up 10.0% of tickets (the #4 category by volume) but 14.0% of all SLA breaches. Its breach rate is 51.6%, against 35.0% for every other category. The median ticket takes 54.5 hours to resolve, against 7.4 hours elsewhere. Only 14.1% of these tickets are resolved by the first-line desk, compared with 40.8% for the rest of the workload.
 
 ## 2. Impact
 
@@ -81,7 +81,7 @@ The breach rate improved after March, along with the whole desk (see the data no
 |---|---|---|
 | 1. Why does Category 46 drive the most breaches? | Its tickets take far longer to resolve (median 54.5 h against 7.4 h). | **Data** |
 | 2. Why do they take longer? | Only 14.1% are fixed at first line. The rest wait in a second-line queue, where the median is 86.2 h. | **Data** |
-| 3. Why can't first line fix them? | There's no documented fix for first line to use: knowledge is attached on 7.0% of tickets, half the desk rate. Intake also misses information, so a third of tickets stall in "Awaiting User Info". | **Data** (rates). The claim that no first-line procedure exists is an **assumption**, to be confirmed with the desk lead. |
+| 3. Why can't first line fix them? | There's no documented fix for first line to use: knowledge is attached on 7.0% of tickets against 14.4% for the desk. Intake also misses information, so 32.5% of tickets stall in "Awaiting User Info" (desk: 20.7%). | **Data** (rates). The claim that no first-line procedure exists is an **assumption**, to be confirmed with the desk lead. |
 | 4. Why is there no documented fix or clear route? | Ownership is spread over 38 resolver groups, with a 17.7 h median in the fastest (Group 39) and 326.3 h in the slowest (Group 10). Nobody owns the category end to end. | **Data** (spread). That this causes the missing knowledge is an **assumption**. |
 | 5. Why has nobody owned it? | The faults recur (problem records are linked 4.6% of the time against 1.0% elsewhere), but the other tickets are still handled one at a time instead of being fixed at the source. | **Data** (link rates). That problem management isn't driving a permanent fix for this category is an **assumption**. |
 
