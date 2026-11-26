@@ -1,0 +1,50 @@
+table Projection
+	lineageTag: 51066a3e-d2df-5b8a-bf97-69e75be9cfea
+
+	column metric
+		dataType: string
+		lineageTag: 5fdd6ec8-bc07-5e52-916b-0eece5eeb0de
+		summarizeBy: none
+		sourceColumn: metric
+		sortByColumn: metric_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column metric_sort
+		dataType: int64
+		lineageTag: 9ad2e9f0-ffee-586e-b9bb-9e26ac25733a
+		summarizeBy: none
+		sourceColumn: metric_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column before
+		dataType: double
+		formatString: #,0.0
+		lineageTag: 731b44a9-bffa-5b4f-824c-58c821e7960d
+		summarizeBy: sum
+		sourceColumn: before
+
+		annotation SummarizationSetBy = Automatic
+
+	column after
+		dataType: double
+		formatString: #,0.0
+		lineageTag: 15f95ca3-5ff6-5de6-b206-c48490c413af
+		summarizeBy: sum
+		sourceColumn: after
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Projection = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "problem_projection.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"metric", "metric_sort", "before", "after"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"metric", type text}, {"metric_sort", Int64.Type}, {"before", type number}, {"after", type number}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

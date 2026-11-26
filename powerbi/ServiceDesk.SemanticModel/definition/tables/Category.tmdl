@@ -1,0 +1,31 @@
+table Category
+	lineageTag: 08e8d0a9-3daa-5c5c-94c3-3b216fc71ea0
+
+	column category
+		dataType: string
+		lineageTag: 5aa0441b-1a2a-5edc-9d50-feb8c59a3c04
+		summarizeBy: none
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column volume_rank
+		dataType: int64
+		lineageTag: 72f6f7f6-ade1-5f73-81b3-c8eb4b50b945
+		summarizeBy: none
+		sourceColumn: volume_rank
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Category = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_category.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"category", "volume_rank"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"category", type text}, {"volume_rank", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

@@ -57,8 +57,9 @@ What sets Category 46 apart from the rest of the desk (all data-backed):
 | Went to "Awaiting User Info" at least once | 32.5% | 20.7% | Intake doesn't capture what the resolver needs. |
 | Linked to a problem record | 4.6% | 1.0% | A problem record exists more often than elsewhere, a sign of known recurring faults, but most tickets are still worked one at a time. |
 | Different resolving groups | 38 | — | There's no single owner. The top 5 groups resolve only 49.2%. |
+| Repeat ticket (same caller, same category, within 7 days) | 29.5% | 18.6% | The first fix often doesn't stick, or the user comes back for the same thing. |
 | Reassigned at least once | 44.3% | 45.8% | **About the same.** Reassignment isn't what sets it apart. |
-| Reopened | 0.62% | 1.15% | Fixes hold once they're applied. |
+| Reopened | 0.62% | 1.15% | Low, but repeat tickets suggest users open a new ticket rather than reopen the old one. |
 
 When a Category 46 ticket *is* reassigned, its median time goes from 16.8 h to 142.8 h, and its breach rate goes from 42.6% to 62.9%.
 

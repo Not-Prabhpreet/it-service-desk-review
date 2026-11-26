@@ -1,0 +1,310 @@
+table Incident
+	lineageTag: 871299ab-f7ca-5bc3-a4ec-445e9fb1fb4c
+
+	column incident_id
+		dataType: string
+		lineageTag: 05e4b448-f614-5689-8ac8-d9e75cf868b2
+		summarizeBy: none
+		sourceColumn: incident_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column opened_at
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn
+		lineageTag: 4f9b2048-f869-5337-9c38-2ca7837e6a27
+		summarizeBy: none
+		sourceColumn: opened_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column resolved_at
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn
+		lineageTag: fe956372-da7f-5be9-bacf-99cd7f0f3997
+		summarizeBy: none
+		sourceColumn: resolved_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column closed_at
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn
+		lineageTag: f84b8f49-73e9-5e13-ad5f-8dc070501111
+		summarizeBy: none
+		sourceColumn: closed_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column resolved_source
+		dataType: string
+		lineageTag: a6fea15f-6b93-500a-beeb-18f6e37e15e7
+		summarizeBy: none
+		sourceColumn: resolved_source
+
+		annotation SummarizationSetBy = Automatic
+
+	column priority
+		dataType: string
+		lineageTag: 6a338961-af9a-544e-a967-92760d1a696c
+		summarizeBy: none
+		sourceColumn: priority
+
+		annotation SummarizationSetBy = Automatic
+
+	column impact
+		dataType: string
+		lineageTag: bb280172-e908-519a-b06b-5f9654dd0a2d
+		summarizeBy: none
+		sourceColumn: impact
+
+		annotation SummarizationSetBy = Automatic
+
+	column urgency
+		dataType: string
+		lineageTag: b5af7cdc-0006-538d-9ccc-670a8fb6a72f
+		summarizeBy: none
+		sourceColumn: urgency
+
+		annotation SummarizationSetBy = Automatic
+
+	column category
+		dataType: string
+		lineageTag: df49932e-2290-59b6-9cdd-c94585645626
+		summarizeBy: none
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column subcategory
+		dataType: string
+		lineageTag: bb3bbfef-eac3-565b-858f-08c9da61b708
+		summarizeBy: none
+		sourceColumn: subcategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column symptom
+		dataType: string
+		lineageTag: 47d720d1-a973-58e3-99f5-d4df9222b992
+		summarizeBy: none
+		sourceColumn: symptom
+
+		annotation SummarizationSetBy = Automatic
+
+	column assignment_group
+		dataType: string
+		lineageTag: 8438c529-9ebb-5467-920a-25045a50d055
+		summarizeBy: none
+		sourceColumn: assignment_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_assignment_group
+		dataType: string
+		lineageTag: 93b9a1ed-9ae0-5c28-91d3-b3820a1d46e6
+		summarizeBy: none
+		sourceColumn: first_assignment_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column groups_touched
+		dataType: int64
+		lineageTag: e60a1d40-15f7-5f3e-95b2-0b1ddccf54d0
+		summarizeBy: sum
+		sourceColumn: groups_touched
+
+		annotation SummarizationSetBy = Automatic
+
+	column caller_id
+		dataType: string
+		lineageTag: e01803ed-f990-5da1-aa80-3c7810784fe0
+		summarizeBy: none
+		sourceColumn: caller_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column contact_type
+		dataType: string
+		lineageTag: dc4c3761-92be-5555-b9ea-d4c0fd26d4db
+		summarizeBy: none
+		sourceColumn: contact_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column location
+		dataType: string
+		lineageTag: 3df3044d-2c19-5ac8-b394-106d9600eaab
+		summarizeBy: none
+		sourceColumn: location
+
+		annotation SummarizationSetBy = Automatic
+
+	column knowledge_used
+		dataType: string
+		lineageTag: 4481fb1c-351a-5dc8-a04a-79314e8d2ede
+		summarizeBy: none
+		sourceColumn: knowledge_used
+
+		annotation SummarizationSetBy = Automatic
+
+	column linked_problem
+		dataType: string
+		lineageTag: f218245c-5301-539c-9d89-8bd670b9f605
+		summarizeBy: none
+		sourceColumn: linked_problem
+
+		annotation SummarizationSetBy = Automatic
+
+	column closed_code
+		dataType: string
+		lineageTag: e7841eb7-7dcc-5536-a72a-0d6e3eff0d5a
+		summarizeBy: none
+		sourceColumn: closed_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column event_count
+		dataType: int64
+		lineageTag: 4e44ce92-e754-5760-8392-21071841cdff
+		summarizeBy: sum
+		sourceColumn: event_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column awaiting_user_events
+		dataType: int64
+		lineageTag: e6335e23-41a1-5b38-be77-7e2a8602306b
+		summarizeBy: sum
+		sourceColumn: awaiting_user_events
+
+		annotation SummarizationSetBy = Automatic
+
+	column resolution_hours
+		dataType: double
+		formatString: #,0.0
+		lineageTag: 888f4737-04e2-5263-9342-06e89953055a
+		summarizeBy: sum
+		sourceColumn: resolution_hours
+
+		annotation SummarizationSetBy = Automatic
+
+	column met_sla
+		dataType: string
+		lineageTag: 518d9044-c11d-5820-aa13-975c1d696608
+		summarizeBy: none
+		sourceColumn: met_sla
+
+		annotation SummarizationSetBy = Automatic
+
+	column met_sla_flag
+		dataType: int64
+		lineageTag: 3d89cec9-749f-587a-9e24-70e663055113
+		summarizeBy: none
+		sourceColumn: met_sla_flag
+
+		annotation SummarizationSetBy = Automatic
+
+	column reassignment_count
+		dataType: int64
+		lineageTag: 65ebd7af-1762-5201-8032-9c1b7edf960f
+		summarizeBy: sum
+		sourceColumn: reassignment_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column reassigned
+		dataType: string
+		lineageTag: 430f1c41-4c4e-538d-8add-f488ebf13192
+		summarizeBy: none
+		sourceColumn: reassigned
+
+		annotation SummarizationSetBy = Automatic
+
+	column reopen_count
+		dataType: int64
+		lineageTag: 1f06f574-7355-5c4e-a9ff-f28e401e862a
+		summarizeBy: sum
+		sourceColumn: reopen_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column reopened
+		dataType: string
+		lineageTag: 73c43eb5-f876-5bb1-bde5-9320fadf0584
+		summarizeBy: none
+		sourceColumn: reopened
+
+		annotation SummarizationSetBy = Automatic
+
+	column opened_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 2ebba916-8965-5a38-94eb-10549e69c13c
+		summarizeBy: none
+		sourceColumn: opened_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column resolved_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 2a0ac154-d05d-5b61-8452-309b7945f929
+		summarizeBy: none
+		sourceColumn: resolved_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: string
+		lineageTag: 8610991d-e48d-5a47-bce7-f567d2de0782
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+	column priority_sort
+		dataType: int64
+		lineageTag: ca78d6a6-2876-50ef-8ca1-f3124b633bc5
+		summarizeBy: none
+		sourceColumn: priority_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column repeat_7d
+		dataType: string
+		lineageTag: a3fef612-27d2-5c2e-9fa3-b4eb000d3c33
+		summarizeBy: none
+		sourceColumn: repeat_7d
+
+		annotation SummarizationSetBy = Automatic
+
+	column resolution_bucket
+		dataType: string
+		lineageTag: f73a7a14-b35b-5390-80d8-4f459b3940da
+		summarizeBy: none
+		sourceColumn: resolution_bucket
+		sortByColumn: resolution_bucket_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column resolution_bucket_sort
+		dataType: int64
+		lineageTag: 0ca34fd3-a57c-55ca-96db-bdf6e173c531
+		summarizeBy: none
+		sourceColumn: resolution_bucket_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Incident = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "fact_incident.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"incident_id", "opened_at", "resolved_at", "closed_at", "resolved_source", "priority", "impact", "urgency", "category", "subcategory", "symptom", "assignment_group", "first_assignment_group", "groups_touched", "caller_id", "contact_type", "location", "knowledge_used", "linked_problem", "closed_code", "event_count", "awaiting_user_events", "resolution_hours", "met_sla", "met_sla_flag", "reassignment_count", "reassigned", "reopen_count", "reopened", "opened_date", "resolved_date", "month", "priority_sort", "repeat_7d", "resolution_bucket", "resolution_bucket_sort"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"incident_id", type text}, {"opened_at", type datetime}, {"resolved_at", type datetime}, {"closed_at", type datetime}, {"resolved_source", type text}, {"priority", type text}, {"impact", type text}, {"urgency", type text}, {"category", type text}, {"subcategory", type text}, {"symptom", type text}, {"assignment_group", type text}, {"first_assignment_group", type text}, {"groups_touched", Int64.Type}, {"caller_id", type text}, {"contact_type", type text}, {"location", type text}, {"knowledge_used", type text}, {"linked_problem", type text}, {"closed_code", type text}, {"event_count", Int64.Type}, {"awaiting_user_events", Int64.Type}, {"resolution_hours", type number}, {"met_sla", type text}, {"met_sla_flag", Int64.Type}, {"reassignment_count", Int64.Type}, {"reassigned", type text}, {"reopen_count", Int64.Type}, {"reopened", type text}, {"opened_date", type date}, {"resolved_date", type date}, {"month", type text}, {"priority_sort", Int64.Type}, {"repeat_7d", type text}, {"resolution_bucket", type text}, {"resolution_bucket_sort", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

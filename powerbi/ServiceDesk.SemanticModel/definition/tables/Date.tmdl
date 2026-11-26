@@ -1,0 +1,85 @@
+table Date
+	lineageTag: 1dd7538e-6b10-52dc-8755-cd1700ab9f33
+	dataCategory: Time
+
+	column date
+		dataType: dateTime
+		isKey
+		formatString: d mmm yyyy
+		lineageTag: f28066bf-2728-5292-b0a4-1118f3d5233b
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+	column year
+		dataType: int64
+		lineageTag: 10d03376-32d0-5fbd-a114-55094ae1ac72
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: string
+		lineageTag: 92f87443-e9b7-516c-9d39-1c27a404627c
+		summarizeBy: none
+		sourceColumn: month
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		lineageTag: 9dd1a84a-e33f-569c-baed-e7ba836bb054
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: month_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_start
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: ea6d6d6d-abf8-5985-a712-952ba9a69ef0
+		summarizeBy: none
+		sourceColumn: month_start
+
+		annotation SummarizationSetBy = Automatic
+
+	column week_start
+		dataType: dateTime
+		formatString: d mmm
+		lineageTag: e5bda0f8-8d97-5ef8-af44-bb579f85f98e
+		summarizeBy: none
+		sourceColumn: week_start
+
+		annotation SummarizationSetBy = Automatic
+
+	column weekday
+		dataType: string
+		lineageTag: 2b6d8e0d-6e77-5c63-8d45-f0c6cfebef6c
+		summarizeBy: none
+		sourceColumn: weekday
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_sort
+		dataType: int64
+		lineageTag: 85945333-8603-589f-b464-bf98c4f0e163
+		summarizeBy: none
+		sourceColumn: month_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Date = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_date.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"date", "year", "month", "month_name", "month_start", "week_start", "weekday", "month_sort"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"date", type date}, {"year", Int64.Type}, {"month", type text}, {"month_name", type text}, {"month_start", type date}, {"week_start", type date}, {"weekday", type text}, {"month_sort", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

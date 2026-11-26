@@ -1,0 +1,19 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["DataFolder", "Incident", "Date", "Category", "Priority", "Assignment Group", "Projection", "Measures"]
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+ref table Incident
+ref table Date
+ref table Category
+ref table Priority
+ref table 'Assignment Group'
+ref table Projection
+ref table Measures

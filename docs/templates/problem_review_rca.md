@@ -42,8 +42,9 @@ What sets ${problem_category} apart from the rest of the desk (all data-backed):
 | Went to "Awaiting User Info" at least once | ${problem_awaiting_user_rate}% | ${problem_awaiting_user_rate_rest}% | Intake doesn't capture what the resolver needs. |
 | Linked to a problem record | ${problem_problem_link_rate}% | ${problem_problem_link_rate_rest}% | A problem record exists more often than elsewhere, a sign of known recurring faults, but most tickets are still worked one at a time. |
 | Different resolving groups | ${problem_resolver_groups} | — | There's no single owner. The top 5 groups resolve only ${problem_top5_group_share}%. |
+| Repeat ticket (same caller, same category, within 7 days) | ${problem_repeat_rate}% | ${problem_repeat_rate_rest}% | The first fix often doesn't stick, or the user comes back for the same thing. |
 | Reassigned at least once | ${problem_reassign_rate}% | ${problem_reassign_rate_rest}% | **About the same.** Reassignment isn't what sets it apart. |
-| Reopened | ${problem_reopen_rate}% | ${problem_reopen_rate_rest}% | Fixes hold once they're applied. |
+| Reopened | ${problem_reopen_rate}% | ${problem_reopen_rate_rest}% | Low, but repeat tickets suggest users open a new ticket rather than reopen the old one. |
 
 When a ${problem_category} ticket *is* reassigned, its median time goes from ${problem_med_h_not_reassigned} h to ${problem_med_h_reassigned} h, and its breach rate goes from ${problem_breach_not_reassigned}% to ${problem_breach_reassigned}%.
 

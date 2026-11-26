@@ -1,0 +1,31 @@
+table 'Assignment Group'
+	lineageTag: de8a041f-05c6-5106-8df1-4e1a38fdedb3
+
+	column assignment_group
+		dataType: string
+		lineageTag: 6052f068-4be2-5812-92e1-6b17bc24b15c
+		summarizeBy: none
+		sourceColumn: assignment_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column volume_rank
+		dataType: int64
+		lineageTag: 28df1a3a-19ec-559b-8ac4-28e008c852f9
+		summarizeBy: none
+		sourceColumn: volume_rank
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Assignment Group' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_assignment_group.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"assignment_group", "volume_rank"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"assignment_group", type text}, {"volume_rank", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,145 @@
+table Measures
+	lineageTag: 146451fd-8ff1-57c8-a877-a20d95dc53a4
+
+	measure Tickets = COUNTROWS(Incident)
+		formatString: #,0
+		lineageTag: 0bb5e10b-00eb-554e-a53a-797400d90319
+
+	measure 'SLA Met' = CALCULATE([Tickets], Incident[met_sla] = "Yes")
+		formatString: #,0
+		lineageTag: da64e436-e033-53a2-94f1-99444d5d3f0a
+
+	measure 'SLA Breaches' = CALCULATE([Tickets], Incident[met_sla] = "No")
+		formatString: #,0
+		lineageTag: 98911b27-cc81-5c69-b49f-2394980f6306
+
+	measure 'SLA %' = DIVIDE([SLA Met], [Tickets])
+		formatString: 0.0%
+		lineageTag: ff6f4062-3af2-50d5-b1dd-ec3b041c5451
+
+	measure 'Breach Rate' = DIVIDE([SLA Breaches], [Tickets])
+		formatString: 0.0%
+		lineageTag: 8be3d8c4-ec96-5641-8dce-6fd8ee2b47d8
+
+	measure 'Desk Breach Rate' = CALCULATE([Breach Rate], REMOVEFILTERS(Category))
+		formatString: 0.0%
+		lineageTag: 07dc8b8f-b263-561a-a970-7d6031fb1fc5
+
+	measure 'Median Resolution (h)' = MEDIAN(Incident[resolution_hours])
+		formatString: #,0.0
+		lineageTag: 53b2524c-ec53-5164-a30e-243186b288bf
+
+	measure 'Average Resolution (h)' = AVERAGE(Incident[resolution_hours])
+		formatString: #,0.0
+		lineageTag: 6adfc323-4ab5-56f7-9d56-18ba52edbf00
+
+	measure 'Reassignment Rate' = DIVIDE(CALCULATE([Tickets], Incident[reassignment_count] > 0), [Tickets])
+		formatString: 0.0%
+		lineageTag: 0e11cf0e-8d92-53c4-aeb0-5e9ed83624da
+
+	measure 'Avg Reassignments' = AVERAGE(Incident[reassignment_count])
+		formatString: 0.00
+		lineageTag: 6ed89b9b-a058-5434-bd8e-563a4411e473
+
+	measure 'Reopen Rate' = DIVIDE(CALCULATE([Tickets], Incident[reopen_count] > 0), [Tickets])
+		formatString: 0.0%
+		lineageTag: f9a6b287-a541-5506-a330-9fe840ebbeae
+
+	measure 'Repeat Rate' = DIVIDE(CALCULATE([Tickets], Incident[repeat_7d] = "Yes"), [Tickets])
+		formatString: 0.0%
+		lineageTag: 36571cde-af64-5724-9fcf-a1c139f2e377
+
+	measure Backlog =
+			VAR d = MAX('Date'[date])
+			RETURN
+			    CALCULATE(
+			        [Tickets],
+			        REMOVEFILTERS('Date'),
+			        Incident[opened_date] <= d,
+			        ISBLANK(Incident[resolved_date]) || Incident[resolved_date] > d
+			    )
+		formatString: #,0
+		lineageTag: 5851379f-9547-558f-9675-4a75bfa6b41d
+
+	measure 'Tickets Prev Month' = CALCULATE([Tickets], DATEADD('Date'[date], -1, MONTH))
+		formatString: #,0
+		lineageTag: aebb7b9b-7e31-5701-896f-06cb9c4391ae
+
+	measure 'Tickets MoM %' =
+			VAR p = [Tickets Prev Month]
+			RETURN IF(NOT ISBLANK(p), DIVIDE([Tickets] - p, p))
+		formatString: +0.0%;-0.0%;0.0%
+		lineageTag: 62923498-edce-588c-b8dd-e8a90aaf1af0
+
+	measure 'SLA % Prev Month' = CALCULATE([SLA %], DATEADD('Date'[date], -1, MONTH))
+		formatString: 0.0%
+		lineageTag: adf51b3d-efbd-5580-9025-8ffa4aa44bcd
+
+	measure 'SLA % MoM (pts)' =
+			VAR p = [SLA % Prev Month]
+			RETURN IF(NOT ISBLANK(p), ([SLA %] - p) * 100)
+		formatString: +0.0;-0.0;0.0
+		lineageTag: cc08ac55-e933-53d0-bbdb-bf46659b1855
+
+	measure 'Backlog MoM' =
+			VAR p = CALCULATE([Backlog], DATEADD('Date'[date], -1, MONTH))
+			RETURN IF(NOT ISBLANK(p), [Backlog] - p)
+		formatString: +#,0;-#,0;0
+		lineageTag: a1c80ab8-b256-5488-aae0-aee2ba2d9437
+
+	measure 'Ticket Share' = DIVIDE([Tickets], CALCULATE([Tickets], REMOVEFILTERS(Category)))
+		formatString: 0.0%
+		lineageTag: 4c6866c8-06ed-5f42-9ba2-a7f23a1da178
+
+	measure 'Breach Share' = DIVIDE([SLA Breaches], CALCULATE([SLA Breaches], REMOVEFILTERS(Category)))
+		formatString: 0.0%
+		lineageTag: 6dff2b2d-04f3-5826-85ca-74c81769e259
+
+	measure 'Pareto Cumulative %' =
+			VAR cur = [Tickets]
+			VAR tbl = ADDCOLUMNS(ALL(Category[category]), "@t", [Tickets])
+			VAR cum = SUMX(FILTER(tbl, [@t] >= cur), [@t])
+			RETURN IF(NOT ISBLANK(cur), DIVIDE(cum, CALCULATE([Tickets], REMOVEFILTERS(Category))))
+		formatString: 0.0%
+		lineageTag: 46455e97-ac0b-5c3b-b83d-48186d484df4
+
+	measure 'Top 5 Category Share' =
+			VAR t = TOPN(5, ALL(Category[category]), [Tickets])
+			RETURN DIVIDE(CALCULATE([Tickets], t), CALCULATE([Tickets], REMOVEFILTERS(Category)))
+		formatString: 0.0%
+		lineageTag: fde6459f-ae3e-5e0b-9c34-9c36e04868c9
+
+	measure 'First-line Resolution %' = DIVIDE(CALCULATE([Tickets], Incident[assignment_group] = "Group 70"), [Tickets])
+		formatString: 0.0%
+		lineageTag: 194e2dd3-b996-58fe-b792-1d89de20dbc9
+
+	measure 'Knowledge Use %' = DIVIDE(CALCULATE([Tickets], Incident[knowledge_used] = "Yes"), [Tickets])
+		formatString: 0.0%
+		lineageTag: ad8a349c-bf22-5f22-ae85-816e5af32a5b
+
+	measure 'Awaiting User %' = DIVIDE(CALCULATE([Tickets], Incident[awaiting_user_events] > 0), [Tickets])
+		formatString: 0.0%
+		lineageTag: 539572f2-ad37-5a13-aae8-a81b741f2c3c
+
+	measure 'Problem Category' = "Category 46"
+		lineageTag: 750fe0a3-8ab0-5ebd-822d-c8237cc52acd
+
+	measure Change = SUM(Projection[after]) - SUM(Projection[before])
+		formatString: +#,0.0;-#,0.0;0.0
+		lineageTag: 08b21c85-833d-514a-8fe6-cffca056ca19
+
+	column Placeholder
+		dataType: string
+		isHidden
+		lineageTag: 64d0b834-50a2-56a3-ad4b-989529a3ae39
+		summarizeBy: none
+		sourceColumn: Placeholder
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Measures = m
+		mode: import
+		source =
+				#table(type table [Placeholder = text], {})
+
+	annotation PBI_ResultType = Table

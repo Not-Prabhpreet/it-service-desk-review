@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "ServiceDesk"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "de5cb649-a290-5ac9-88c1-f1be2aa468b6"
+  }
+}

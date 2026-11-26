@@ -1,0 +1,41 @@
+table Priority
+	lineageTag: 3f0ec65f-725b-5fb2-a9bb-2e05820d944c
+
+	column priority
+		dataType: string
+		lineageTag: 01f45f6f-843f-541e-aee5-54672308bc4a
+		summarizeBy: none
+		sourceColumn: priority
+		sortByColumn: priority_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column priority_sort
+		dataType: int64
+		lineageTag: bbe7dd21-8950-5f49-851b-77260d36f657
+		summarizeBy: none
+		sourceColumn: priority_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column priority_short
+		dataType: string
+		lineageTag: a7aa9e6f-fbfa-5fdc-bb36-8e331f4773bd
+		summarizeBy: none
+		sourceColumn: priority_short
+		sortByColumn: priority_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Priority = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_priority.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Selected = Table.SelectColumns(Promoted, {"priority", "priority_sort", "priority_short"}),
+				    Typed = Table.TransformColumnTypes(Selected, {{"priority", type text}, {"priority_sort", Int64.Type}, {"priority_short", type text}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table
