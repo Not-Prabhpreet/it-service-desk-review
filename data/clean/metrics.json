@@ -1,0 +1,381 @@
+{
+  "overall": {
+    "tickets": 24437,
+    "months": 3,
+    "tickets_per_month": 8146.0,
+    "breaches": 8947,
+    "sla_pct": 63.4,
+    "median_res_h": 14.9,
+    "mean_res_h": 165.0,
+    "p90_res_h": 359.1,
+    "reassign_rate": 45.7,
+    "avg_reassign": 0.94,
+    "reopen_rate": 1.1,
+    "moderate_share": 94.3,
+    "window_label": "Mar 2016 - May 2016"
+  },
+  "monthly": {
+    "2016-03": {
+      "label": "Mar 2016",
+      "tickets": 8995,
+      "sla_pct": 39.9,
+      "median_h": 49.4,
+      "reassign_rate": 55.9,
+      "reopen_rate": 1.4,
+      "backlog": 1490
+    },
+    "2016-04": {
+      "label": "Apr 2016",
+      "tickets": 7934,
+      "sla_pct": 76.7,
+      "median_h": 2.7,
+      "reassign_rate": 40.9,
+      "reopen_rate": 0.9,
+      "backlog": 1193
+    },
+    "2016-05": {
+      "label": "May 2016",
+      "tickets": 7508,
+      "sla_pct": 77.5,
+      "median_h": 2.0,
+      "reassign_rate": 38.5,
+      "reopen_rate": 0.9,
+      "backlog": 1243
+    }
+  },
+  "mom": {
+    "tickets_pct": -5.4,
+    "sla_pts": 0.8,
+    "from_label": "Apr 2016",
+    "to_label": "May 2016"
+  },
+  "backlog": {
+    "peak": 1870,
+    "peak_date": "16 Mar 2016",
+    "end": 1243
+  },
+  "priority": {
+    "1 - Critical": {
+      "tickets": 255,
+      "share": 1.0,
+      "sla_pct": 1.6,
+      "median_h": 79.1
+    },
+    "2 - High": {
+      "tickets": 401,
+      "share": 1.6,
+      "sla_pct": 0.5,
+      "median_h": 40.0
+    },
+    "3 - Moderate": {
+      "tickets": 23051,
+      "share": 94.3,
+      "sla_pct": 64.4,
+      "median_h": 13.4
+    },
+    "4 - Low": {
+      "tickets": 730,
+      "share": 3.0,
+      "sla_pct": 86.6,
+      "median_h": 1.0
+    }
+  },
+  "p1p2": {
+    "tickets": 656,
+    "sla_pct": 0.9,
+    "median_h": 52.0
+  },
+  "categories": {
+    "count": 40,
+    "top5_share": 54.9,
+    "top10_share": 76.7,
+    "n_for_80pct": 12,
+    "top_by_volume": [
+      {
+        "category": "Category 42",
+        "tickets": 3508,
+        "share": 14.4,
+        "breach_rate": 19.4
+      },
+      {
+        "category": "Category 26",
+        "tickets": 3332,
+        "share": 13.6,
+        "breach_rate": 30.5
+      },
+      {
+        "category": "Category 53",
+        "tickets": 2624,
+        "share": 10.7,
+        "breach_rate": 37.9
+      },
+      {
+        "category": "Category 46",
+        "tickets": 2432,
+        "share": 10.0,
+        "breach_rate": 51.6
+      },
+      {
+        "category": "Category 32",
+        "tickets": 1515,
+        "share": 6.2,
+        "breach_rate": 24.8
+      },
+      {
+        "category": "Category 9",
+        "tickets": 1136,
+        "share": 4.6,
+        "breach_rate": 41.3
+      },
+      {
+        "category": "Category 37",
+        "tickets": 1135,
+        "share": 4.6,
+        "breach_rate": 33.6
+      },
+      {
+        "category": "Category 23",
+        "tickets": 1057,
+        "share": 4.3,
+        "breach_rate": 47.6
+      },
+      {
+        "category": "Category 20",
+        "tickets": 1034,
+        "share": 4.2,
+        "breach_rate": 23.0
+      },
+      {
+        "category": "Category 57",
+        "tickets": 971,
+        "share": 4.0,
+        "breach_rate": 40.2
+      }
+    ],
+    "top_by_breaches": [
+      {
+        "category": "Category 46",
+        "breaches": 1254,
+        "breach_share": 14.0,
+        "breach_rate": 51.6
+      },
+      {
+        "category": "Category 26",
+        "breaches": 1016,
+        "breach_share": 11.4,
+        "breach_rate": 30.5
+      },
+      {
+        "category": "Category 53",
+        "breaches": 994,
+        "breach_share": 11.1,
+        "breach_rate": 37.9
+      },
+      {
+        "category": "Category 42",
+        "breaches": 680,
+        "breach_share": 7.6,
+        "breach_rate": 19.4
+      },
+      {
+        "category": "Category 23",
+        "breaches": 503,
+        "breach_share": 5.6,
+        "breach_rate": 47.6
+      },
+      {
+        "category": "Category 9",
+        "breaches": 469,
+        "breach_share": 5.2,
+        "breach_rate": 41.3
+      },
+      {
+        "category": "Category 61",
+        "breaches": 428,
+        "breach_share": 4.8,
+        "breach_rate": 53.2
+      },
+      {
+        "category": "Category 57",
+        "breaches": 390,
+        "breach_share": 4.4,
+        "breach_rate": 40.2
+      },
+      {
+        "category": "Category 37",
+        "breaches": 381,
+        "breach_share": 4.3,
+        "breach_rate": 33.6
+      },
+      {
+        "category": "Category 45",
+        "breaches": 377,
+        "breach_share": 4.2,
+        "breach_rate": 76.0
+      }
+    ]
+  },
+  "first_line": {
+    "group": "Group 70",
+    "tickets": 9319,
+    "share": 38.1,
+    "median_h": 0.2
+  },
+  "worst_groups": [
+    {
+      "group": "Group 12",
+      "tickets": 117,
+      "breach_rate": 91.5,
+      "median_h": 318.9
+    },
+    {
+      "group": "Group 10",
+      "tickets": 338,
+      "breach_rate": 75.1,
+      "median_h": 404.1
+    },
+    {
+      "group": "Group 37",
+      "tickets": 172,
+      "breach_rate": 75.0,
+      "median_h": 240.5
+    },
+    {
+      "group": "Group 74",
+      "tickets": 103,
+      "breach_rate": 69.9,
+      "median_h": 150.0
+    },
+    {
+      "group": "Group 31",
+      "tickets": 186,
+      "breach_rate": 69.4,
+      "median_h": 94.8
+    }
+  ],
+  "reassign_effect": {
+    "med_h_no": 0.4,
+    "med_h_yes": 81.2,
+    "breach_no": 21.5,
+    "breach_yes": 54.7
+  },
+  "problem_scenario_fl": {
+    "target_share": 40.8,
+    "tickets_shifted_pm": 217.0,
+    "med_h_first_line": 0.18,
+    "med_h_other": 99.8,
+    "breach_first_line": 23.1,
+    "breach_other": 57.8,
+    "hours_saved_pm": 21600.0,
+    "breaches_avoided_pm": 75.0,
+    "new_cat_breach_rate": 42.3,
+    "new_overall_sla": 64.3
+  },
+  "problem": {
+    "excess_wait_hours_pm": 243800.0,
+    "category": "Category 46",
+    "tickets": 2432,
+    "tickets_pm": 811.0,
+    "share": 10.0,
+    "volume_rank": 4,
+    "breaches": 1254,
+    "breaches_pm": 418.0,
+    "breach_share": 14.0,
+    "breach_rate": 51.6,
+    "breach_rate_rest": 35.0,
+    "median_h": 54.5,
+    "median_h_rest": 7.4,
+    "hours_total": 744545.0,
+    "hours_share": 18.5,
+    "breached_hours_pm": 239290.0,
+    "reassign_rate": 44.3,
+    "reassign_rate_rest": 45.8,
+    "reopen_rate": 0.62,
+    "reopen_rate_rest": 1.15,
+    "groups_touched_avg": 1.65,
+    "groups_touched_rest": 1.54,
+    "resolver_groups": 38,
+    "top5_group_share": 49.2,
+    "first_line_share": 14.1,
+    "first_line_share_rest": 40.8,
+    "first_line_med_h": 0.18,
+    "other_groups_med_h": 86.2,
+    "knowledge_rate": 7.0,
+    "knowledge_rate_rest": 14.4,
+    "problem_link_rate": 4.6,
+    "problem_link_rate_rest": 1.0,
+    "awaiting_user_rate": 32.5,
+    "awaiting_user_rate_rest": 20.7,
+    "moderate_share": 92.2,
+    "top_subcategory": "Subcategory 223",
+    "top_subcategory_share": 28.0,
+    "groups": [
+      {
+        "group": "Group 70",
+        "tickets": 342,
+        "median_h": 0.2,
+        "breach_rate": 23.1
+      },
+      {
+        "group": "Group 57",
+        "tickets": 236,
+        "median_h": 165.5,
+        "breach_rate": 64.8
+      },
+      {
+        "group": "Group 39",
+        "tickets": 209,
+        "median_h": 17.7,
+        "breach_rate": 32.1
+      },
+      {
+        "group": "Group 6",
+        "tickets": 206,
+        "median_h": 116.6,
+        "breach_rate": 53.4
+      },
+      {
+        "group": "Group 10",
+        "tickets": 204,
+        "median_h": 326.3,
+        "breach_rate": 63.7
+      },
+      {
+        "group": "Group 22",
+        "tickets": 173,
+        "median_h": 71.9,
+        "breach_rate": 51.4
+      }
+    ],
+    "monthly": {
+      "2016-03": {
+        "label": "Mar 2016",
+        "tickets": 908,
+        "breach_rate": 66.1,
+        "reassign_rate": 46.3
+      },
+      "2016-04": {
+        "label": "Apr 2016",
+        "tickets": 787,
+        "breach_rate": 45.6,
+        "reassign_rate": 44.2
+      },
+      "2016-05": {
+        "label": "May 2016",
+        "tickets": 737,
+        "breach_rate": 40.0,
+        "reassign_rate": 41.9
+      }
+    },
+    "reassigned_pm": 359.0,
+    "med_h_reassigned": 142.8,
+    "med_h_not_reassigned": 16.8,
+    "delta_h": 126.1,
+    "breach_reassigned": 62.9,
+    "breach_not_reassigned": 42.6,
+    "proj_hours_saved_pm": 22600.0,
+    "proj_breaches_avoided_pm": 36.0,
+    "proj_cat_breach_rate": 47.1,
+    "proj_overall_sla": 63.8
+  }
+}
