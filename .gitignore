@@ -1,0 +1,8 @@
+data/raw/*
+!data/raw/README.md
+__pycache__/
+*.pyc
+powerbi/*.pbix.bak
+powerbi/**/.pbi/localSettings.json
+powerbi/**/.pbi/cache.abf
+~$*

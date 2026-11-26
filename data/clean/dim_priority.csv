@@ -1,0 +1,5 @@
+priority,priority_sort,priority_short
+1 - Critical,1,P1 Critical
+2 - High,2,P2 High
+3 - Moderate,3,P3 Moderate
+4 - Low,4,P4 Low

@@ -1,0 +1,42 @@
+{
+  "raw_events": 141712,
+  "raw_columns": 36,
+  "raw_incidents": 24918,
+  "events_state_minus100": 5,
+  "events_dup_mod_count": 5,
+  "final_state_counts": {
+    "Closed": 24918
+  },
+  "resolved_missing_final_row": 1556,
+  "resolved_filled_from_event": 1543,
+  "resolved_still_missing": 13,
+  "missing_category": 7,
+  "missing_group": 2157,
+  "negative_resolution": 0,
+  "sla_flag_changed_within_incident": 9114,
+  "reassign_final_equals_max": true,
+  "reopen_final_equals_max": true,
+  "opened_by_month_all": {
+    "2016-02": 207,
+    "2016-03": 8995,
+    "2016-04": 7934,
+    "2016-05": 7508,
+    "2016-06": 5,
+    "2016-07": 14,
+    "2016-08": 15,
+    "2016-09": 12,
+    "2016-10": 16,
+    "2016-11": 26,
+    "2016-12": 37,
+    "2017-01": 94,
+    "2017-02": 55
+  },
+  "excluded_outside_window": 481,
+  "fact_rows": 24437,
+  "window": [
+    "2016-03-01",
+    "2016-05-31"
+  ],
+  "resolution_p99_hours": 2711.2,
+  "resolution_over_p99": 245
+}
