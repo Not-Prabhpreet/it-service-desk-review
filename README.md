@@ -44,6 +44,8 @@ The "Incident management process enriched event log" from the UCI Machine Learni
 
 ![04 problem review](powerbi/screenshots/04_problem_review.png)
 
+![05 live desk](powerbi/screenshots/05_live_desk.png)
+
 ## Files
 
 | What | Where |
