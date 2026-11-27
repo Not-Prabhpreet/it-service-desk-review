@@ -1,0 +1,10 @@
+Impact,Urgency,Priority,ResolveHours
+High,High,P1 Critical,4
+High,Medium,P2 High,8
+Medium,High,P2 High,8
+High,Low,P3 Moderate,72
+Medium,Medium,P3 Moderate,72
+Low,High,P3 Moderate,72
+Medium,Low,P4 Low,120
+Low,Medium,P4 Low,120
+Low,Low,P4 Low,120

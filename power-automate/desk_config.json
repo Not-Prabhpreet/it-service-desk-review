@@ -1,0 +1,24 @@
+{
+  "tenant_id": "146f516e-84a7-4bc8-9f5a-04cb9d98091d",
+  "account": "admin@prabh272002gmail.onmicrosoft.com",
+  "site_url": "https://prabh272002gmail.sharepoint.com",
+  "lead_email": "admin@prabh272002gmail.onmicrosoft.com",
+  "default_assignee_email": "admin@prabh272002gmail.onmicrosoft.com",
+  "time_zone": "Newfoundland Standard Time",
+  "lists": {
+    "IT Tickets": "0d510661-3dad-4d74-8962-30027bf8b65f",
+    "Desk Rules - Keywords": "dd54cea2-1df4-4928-a807-e4ef8728e3f9",
+    "Desk Rules - Impact": "61da913a-49f1-4c06-8424-a78c7eae4c62",
+    "Desk Rules - Priority": "6ba35898-8d0d-4f89-be61-c77dad67e6f5"
+  },
+  "form_id": "",
+  "form_url": "",
+  "questions": {
+    "name": "",
+    "email": "",
+    "service": "",
+    "description": "",
+    "urgency": ""
+  },
+  "site_id": "prabh272002gmail.sharepoint.com,ba931c96-42f7-407e-8e11-14464070e492,8ac82fa8-5112-4216-ba02-a04d17c195d0"
+}
