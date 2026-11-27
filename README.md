@@ -5,7 +5,7 @@ A sample of service-desk analysis on a **real ServiceNow incident log**: 24,437 
 
 ## Try it
 
-- **Live service desk:** being set up. See [power-automate/](power-automate/).
+- **Submit a test IT request:** [open the form](https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=blFvFKeEyEufWgTLnZgJHbY7vi8ByM1FktdPzAle14RUOVZJNFA1SEhWM0Y3NkxIVk43NjFPRTBFNC4u). No account needed. You'll get a confirmation email with your ticket number within a minute, and the ticket appears on the dashboard's Live Desk page after a refresh. The live desk runs on a trial tenant until 2026-12-27. How it works and the test log: [power-automate/README.md](power-automate/README.md).
 - **Dashboard PDF:** [powerbi/ServiceDesk.pdf](powerbi/ServiceDesk.pdf). Screenshots are below.
 
 ## The question

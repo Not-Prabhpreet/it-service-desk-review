@@ -1,0 +1,220 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.6.0/schema.json",
+  "name": "ticketTable",
+  "position": {
+    "x": 24,
+    "y": 454,
+    "z": 11000,
+    "height": 254,
+    "width": 1232,
+    "tabOrder": 11000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Live Tickets"
+                    }
+                  },
+                  "Property": "Ticket"
+                }
+              },
+              "queryRef": "Live Tickets.Ticket",
+              "nativeQueryRef": "Ticket"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Live Tickets"
+                    }
+                  },
+                  "Property": "Category"
+                }
+              },
+              "queryRef": "Live Tickets.Category",
+              "nativeQueryRef": "Category"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Live Tickets"
+                    }
+                  },
+                  "Property": "Priority"
+                }
+              },
+              "queryRef": "Live Tickets.Priority",
+              "nativeQueryRef": "Priority"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Live Tickets"
+                    }
+                  },
+                  "Property": "Status"
+                }
+              },
+              "queryRef": "Live Tickets.Status",
+              "nativeQueryRef": "Status"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Live Tickets"
+                    }
+                  },
+                  "Property": "OpenedAt"
+                }
+              },
+              "queryRef": "Live Tickets.OpenedAt",
+              "nativeQueryRef": "OpenedAt",
+              "displayName": "Opened (UTC)"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Live Tickets"
+                    }
+                  },
+                  "Property": "SlaDueAt"
+                }
+              },
+              "queryRef": "Live Tickets.SlaDueAt",
+              "nativeQueryRef": "SlaDueAt",
+              "displayName": "SLA due (UTC)"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Live Tickets"
+                    }
+                  },
+                  "Property": "MetSLA"
+                }
+              },
+              "queryRef": "Live Tickets.MetSLA",
+              "nativeQueryRef": "MetSLA",
+              "displayName": "Met SLA"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Live Tickets"
+                    }
+                  },
+                  "Property": "ResolutionHours"
+                }
+              },
+              "queryRef": "Live Tickets.ResolutionHours",
+              "nativeQueryRef": "ResolutionHours",
+              "displayName": "Hours to resolve"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Live Tickets"
+                  }
+                },
+                "Property": "Ticket"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": false
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Tickets (newest first)'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11.0D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#0b0b0b'"
+                    }
+                  }
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

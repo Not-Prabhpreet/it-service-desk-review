@@ -2,3 +2,8 @@ expression DataFolder = "C:\Users\dev\Documents\it-service-desk-review\data\clea
 	lineageTag: 677f8f91-b6a7-51cb-b9f0-a97304deb11e
 
 	annotation PBI_ResultType = Text
+
+expression SharePointSiteUrl = "https://prabh272002gmail.sharepoint.com" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = false]
+	lineageTag: 69d14bc6-7f45-5d5b-a12d-6052faeda205
+
+	annotation PBI_ResultType = Text

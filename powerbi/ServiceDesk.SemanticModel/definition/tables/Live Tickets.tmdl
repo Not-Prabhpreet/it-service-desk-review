@@ -1,0 +1,156 @@
+table 'Live Tickets'
+	lineageTag: e648f7f2-7061-5e16-8f93-0cba3528a02f
+
+	column Ticket
+		dataType: string
+		lineageTag: 6301bf04-2d04-5eb9-85dc-ec2cc12ce38c
+		summarizeBy: none
+		sourceColumn: Ticket
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: cde4e028-f3f6-5a4c-8f2f-9610e6e24dcf
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column Priority
+		dataType: string
+		lineageTag: 28205a3b-26af-5625-96ec-eb8ce5b645aa
+		summarizeBy: none
+		sourceColumn: Priority
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		lineageTag: 4ee5fdc5-6f31-5418-98b9-c0454b3fe0dd
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column Urgency
+		dataType: string
+		lineageTag: 62b00fd1-0f88-599c-9028-3e98f3166643
+		summarizeBy: none
+		sourceColumn: Urgency
+
+		annotation SummarizationSetBy = Automatic
+
+	column Impact
+		dataType: string
+		lineageTag: cddc74b9-d9ff-56ca-a26c-3ae276f7ae8d
+		summarizeBy: none
+		sourceColumn: Impact
+
+		annotation SummarizationSetBy = Automatic
+
+	column AssignedTo
+		dataType: string
+		lineageTag: 99c5802b-a7fc-5633-8324-65d12ec9d7f3
+		summarizeBy: none
+		sourceColumn: AssignedTo
+
+		annotation SummarizationSetBy = Automatic
+
+	column RequesterName
+		dataType: string
+		lineageTag: 73c87755-63c0-5c87-a00c-e31d5816e90b
+		summarizeBy: none
+		sourceColumn: RequesterName
+
+		annotation SummarizationSetBy = Automatic
+
+	column OpenedAt
+		dataType: dateTime
+		formatString: d mmm yyyy hh:nn
+		lineageTag: a598b66f-118b-5a27-9ef1-7600dcda6590
+		summarizeBy: none
+		sourceColumn: OpenedAt
+
+		annotation SummarizationSetBy = Automatic
+
+	column SlaDueAt
+		dataType: dateTime
+		formatString: d mmm yyyy hh:nn
+		lineageTag: 4b4d56ff-9663-5fac-8818-0d1ef867829e
+		summarizeBy: none
+		sourceColumn: SlaDueAt
+
+		annotation SummarizationSetBy = Automatic
+
+	column WarnAt
+		dataType: dateTime
+		formatString: d mmm yyyy hh:nn
+		lineageTag: 1426fb6f-fb66-56d5-b269-038c9819fed5
+		summarizeBy: none
+		sourceColumn: WarnAt
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResolvedAt
+		dataType: dateTime
+		formatString: d mmm yyyy hh:nn
+		lineageTag: 8270b844-ca35-55e6-b16b-8ba385d855b1
+		summarizeBy: none
+		sourceColumn: ResolvedAt
+
+		annotation SummarizationSetBy = Automatic
+
+	column ResolutionHours
+		dataType: double
+		formatString: #,0.0
+		lineageTag: 89f11df0-809a-518c-b7ec-57aa249e1401
+		summarizeBy: sum
+		sourceColumn: ResolutionHours
+
+		annotation SummarizationSetBy = Automatic
+
+	column MetSLA
+		dataType: string
+		lineageTag: c7c834c5-dc27-5a1b-9e72-baaff5dd243e
+		summarizeBy: none
+		sourceColumn: MetSLA
+
+		annotation SummarizationSetBy = Automatic
+
+	column WarnSent
+		dataType: boolean
+		lineageTag: 5cdcf37d-d37f-5ebb-beac-ac207b75eb71
+		summarizeBy: none
+		sourceColumn: WarnSent
+
+		annotation SummarizationSetBy = Automatic
+
+	column Escalated
+		dataType: boolean
+		lineageTag: 72df254b-46d0-564e-96b1-bf839a2eb049
+		summarizeBy: none
+		sourceColumn: Escalated
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Live Tickets' = m
+		mode: import
+		source =
+				let
+				    Empty = #table(type table [Ticket = text, Category = text, Priority = text, Status = text, Urgency = text, Impact = text, AssignedTo = text, RequesterName = text, OpenedAt = datetime, SlaDueAt = datetime, WarnAt = datetime, ResolvedAt = datetime, ResolutionHours = number, MetSLA = text, WarnSent = logical, Escalated = logical], {}),
+				    Source =
+				        if SharePointSiteUrl = "" then Empty
+				        else
+				            let
+				                Lists = SharePoint.Tables(SharePointSiteUrl, [Implementation = "2.0", ViewMode = "All"]),
+				                Items = Lists{[Title = "IT Tickets"]}[Items],
+				                Renamed = Table.RenameColumns(Items, {{"Title", "Ticket"}}),
+				                Selected = Table.SelectColumns(Renamed, {"Ticket", "Category", "Priority", "Status", "Urgency", "Impact", "AssignedTo", "RequesterName", "OpenedAt", "SlaDueAt", "WarnAt", "ResolvedAt", "ResolutionHours", "MetSLA", "WarnSent", "Escalated"}, MissingField.UseNull)
+				            in
+				                Selected,
+				    Typed = Table.TransformColumnTypes(Source, {{"Ticket", type text}, {"Category", type text}, {"Priority", type text}, {"Status", type text}, {"Urgency", type text}, {"Impact", type text}, {"AssignedTo", type text}, {"RequesterName", type text}, {"OpenedAt", type datetime}, {"SlaDueAt", type datetime}, {"WarnAt", type datetime}, {"ResolvedAt", type datetime}, {"ResolutionHours", type number}, {"MetSLA", type text}, {"WarnSent", type logical}, {"Escalated", type logical}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_ResultType = Table

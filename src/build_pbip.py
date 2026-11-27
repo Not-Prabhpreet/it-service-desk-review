@@ -37,7 +37,12 @@ def q(name):
 # Semantic model
 # --------------------------------------------------------------------------------------
 TYPE_M = {"string": "type text", "int64": "Int64.Type", "double": "type number",
-          "dateTime": "type datetime", "date": "type date"}
+          "dateTime": "type datetime", "date": "type date", "boolean": "type logical"}
+DESK_CONFIG = POWERBI_DIR.parent / "power-automate" / "desk_config.json"
+
+
+def desk_config():
+    return json.loads(DESK_CONFIG.read_text()) if DESK_CONFIG.exists() else {}
 
 
 def problem_config():
@@ -79,7 +84,17 @@ def tables_spec():
     T["Projection"] = dict(file="problem_projection.csv", cols=[
         ("metric", "string", {"sort": "metric_sort"}), ("metric_sort", "int64", {}),
         ("before", "double", {"fmt": "#,0.0"}), ("after", "double", {"fmt": "#,0.0"})])
+    # Live desk: the SharePoint ticket list the Power Automate flows write to.
+    T["Live Tickets"] = dict(sharepoint_list="IT Tickets", rename={"Title": "Ticket"}, cols=[
+        ("Ticket", "string", {}), ("Category", "string", {}), ("Priority", "string", {}), ("Status", "string", {}),
+        ("Urgency", "string", {}), ("Impact", "string", {}), ("AssignedTo", "string", {}), ("RequesterName", "string", {}),
+        ("OpenedAt", "dateTime", {"fmt": "d mmm yyyy hh:nn"}), ("SlaDueAt", "dateTime", {"fmt": "d mmm yyyy hh:nn"}),
+        ("WarnAt", "dateTime", {"fmt": "d mmm yyyy hh:nn"}), ("ResolvedAt", "dateTime", {"fmt": "d mmm yyyy hh:nn"}),
+        ("ResolutionHours", "double", {"fmt": "#,0.0"}), ("MetSLA", "string", {}),
+        ("WarnSent", "boolean", {}), ("Escalated", "boolean", {}),
+    ])
     fl, cat = pc["first_line_group"], pc["problem_category"]
+    open_f = "NOT 'Live Tickets'[Status] IN {\"Resolved\", \"Closed\"}"
     M = [
         ("Tickets", "COUNTROWS(Incident)", "#,0"),
         ("SLA Met", 'CALCULATE([Tickets], Incident[met_sla] = "Yes")', "#,0"),
@@ -114,6 +129,16 @@ def tables_spec():
         ("Awaiting User %", "DIVIDE(CALCULATE([Tickets], Incident[awaiting_user_events] > 0), [Tickets])", "0.0%"),
         ("Problem Category", f'"{cat}"', None),
         ("Change", "IF(HASONEVALUE(Projection[metric]), SUM(Projection[after]) - SUM(Projection[before]))", "+#,0.0;-#,0.0;0.0"),
+        # Live desk (times in the SharePoint list are UTC)
+        ("Live Tickets", "COUNTROWS('Live Tickets') + 0", "#,0"),
+        ("Live Open", f"CALCULATE(COUNTROWS('Live Tickets'), {open_f}) + 0", "#,0"),
+        ("Live At Risk", f"CALCULATE(COUNTROWS('Live Tickets'), {open_f}, "
+                         "FILTER('Live Tickets', 'Live Tickets'[WarnAt] <= UTCNOW() || 'Live Tickets'[SlaDueAt] <= UTCNOW())) + 0", "#,0"),
+        ("Live SLA Breaches", "CALCULATE(COUNTROWS('Live Tickets'), 'Live Tickets'[MetSLA] = \"No\") + 0", "#,0"),
+        ("Live Resolved", "CALCULATE(COUNTROWS('Live Tickets'), 'Live Tickets'[Status] IN {\"Resolved\", \"Closed\"}) + 0", "#,0"),
+        ("Live SLA %", "DIVIDE(CALCULATE(COUNTROWS('Live Tickets'), 'Live Tickets'[MetSLA] = \"Yes\"), "
+                       "CALCULATE(COUNTROWS('Live Tickets'), 'Live Tickets'[MetSLA] IN {\"Yes\", \"No\"}))", "0.0%"),
+        ("Live Median Resolution (h)", "MEDIAN('Live Tickets'[ResolutionHours])", "#,0.0"),
     ]
     return T, M
 
@@ -131,19 +156,49 @@ def tmdl_table(name, spec):
         if o.get("fmt"):
             L.append(f"\t\tformatString: {o['fmt']}")
         L += [f"\t\tlineageTag: {tag('c', name, col)}",
-              "\t\tsummarizeBy: none" if dt in ("string", "date", "dateTime") or col.endswith(("_sort", "_rank", "_flag", "year"))
+              "\t\tsummarizeBy: none" if dt in ("string", "date", "dateTime", "boolean") or col.endswith(("_sort", "_rank", "_flag", "year"))
               else "\t\tsummarizeBy: sum",
               f"\t\tsourceColumn: {col}"]
         if o.get("sort"):
             L.append(f"\t\tsortByColumn: {q(o['sort'])}")
         L += ["", "\t\tannotation SummarizationSetBy = Automatic", ""]
     types = ", ".join(f'{{"{c}", {TYPE_M[dt]}}}' for c, dt, _ in spec["cols"])
+    if spec.get("sharepoint_list"):
+        return sharepoint_table(name, spec, L, types)
     m = [
         "let",
         f'    Source = Csv.Document(File.Contents(DataFolder & "{spec["file"]}"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),',
         "    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),",
         f"    Selected = Table.SelectColumns(Promoted, {{{', '.join(chr(34) + c + chr(34) for c, _, _ in spec['cols'])}}}),",
         f'    Typed = Table.TransformColumnTypes(Selected, {{{types}}}, "en-US")',
+        "in",
+        "    Typed",
+    ]
+    L += [f"\tpartition {q(name)} = m", "\t\tmode: import", "\t\tsource ="]
+    L += ["\t\t\t\t" + x for x in m]
+    L += ["", "\tannotation PBI_ResultType = Table", ""]
+    return "\n".join(L)
+
+
+def sharepoint_table(name, spec, L, types):
+    """Partition that reads a SharePoint list, or returns an empty typed table when the site parameter is blank."""
+    names = ", ".join('"' + c + '"' for c, _, _ in spec["cols"])
+    schema = ", ".join(f"{c} = {TYPE_M[dt].replace('type ', '')}" for c, dt, _ in spec["cols"])
+    ren = ", ".join(f'{{"{a}", "{b}"}}' for a, b in spec["rename"].items())
+    m = [
+        "let",
+        f"    Empty = #table(type table [{schema}], {{}}),",
+        "    Source =",
+        '        if SharePointSiteUrl = "" then Empty',
+        "        else",
+        "            let",
+        '                Lists = SharePoint.Tables(SharePointSiteUrl, [Implementation = "2.0", ViewMode = "All"]),',
+        f'                Items = Lists{{[Title = "{spec["sharepoint_list"]}"]}}[Items],',
+        f"                Renamed = Table.RenameColumns(Items, {{{ren}}}),",
+        f"                Selected = Table.SelectColumns(Renamed, {{{names}}}, MissingField.UseNull)",
+        "            in",
+        "                Selected,",
+        f'    Typed = Table.TransformColumnTypes(Source, {{{types}}}, "en-US")',
         "in",
         "    Typed",
     ]
@@ -201,12 +256,15 @@ def build_model():
     write(d / "model.tmdl", "\n".join([
         "model Model", "\tculture: en-US", "\tdefaultPowerBIDataSourceVersion: powerBI_V3",
         "\tsourceQueryCulture: en-US", "\tdataAccessOptions", "\t\tlegacyRedirects", "\t\treturnErrorValuesAsNull", "",
-        f"annotation PBI_QueryOrder = {json.dumps(['DataFolder'] + order)}", "",
+        f"annotation PBI_QueryOrder = {json.dumps(['DataFolder', 'SharePointSiteUrl'] + order)}", "",
         "annotation __PBI_TimeIntelligenceEnabled = 0", "",
     ] + [f"ref table {q(t)}" for t in order]) + "\n")
+    site = desk_config().get("site_url", "")  # blank = Live Desk page stays empty
     write(d / "expressions.tmdl", "\n".join([
         f'expression DataFolder = "{data_folder}" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]',
-        f"\tlineageTag: {tag('e', 'DataFolder')}", "", "\tannotation PBI_ResultType = Text", ""]))
+        f"\tlineageTag: {tag('e', 'DataFolder')}", "", "\tannotation PBI_ResultType = Text", "",
+        f'expression SharePointSiteUrl = "{site}" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = false]',
+        f"\tlineageTag: {tag('e', 'SharePointSiteUrl')}", "", "\tannotation PBI_ResultType = Text", ""]))
     for name, spec in T.items():
         write(d / "tables" / f"{name}.tmdl", tmdl_table(name, spec))
     write(d / "tables" / "Metrics.tmdl", tmdl_measures(M))
@@ -501,7 +559,50 @@ def build_pages(metrics):
          f"hours a month. See docs/problem_review_rca.md.", 10, False, INK),
     ]))
     pages.append(p)
+    pages.append(live_desk_page())
     return pages
+
+
+def live_desk_page():
+    """Page 5: the live Power Automate desk, read from the SharePoint ticket list on refresh."""
+    dc = desk_config()
+    form = dc.get("form_url") or "(form link appears here once the desk is deployed)"
+    LT = lambda col: C("Live Tickets", col)
+    p = Page("liveDesk", "Live Desk", 4)
+    p.add("header", 24, 8, 1232, 62, textbox([
+        ("Live Desk", 20, True, "#1F3A5F"),
+        ("Tickets submitted through the public Microsoft Form, routed by Power Automate into SharePoint. "
+         "Refresh to see new submissions. Times are UTC.", 10, False, INK2)]))
+    for i, (mname, label) in enumerate([("Live Tickets", "Tickets logged"), ("Live Open", "Open now"),
+                                        ("Live At Risk", "At risk (75%+ of SLA used)"), ("Live SLA Breaches", "SLA breaches"),
+                                        ("Live Resolved", "Resolved"), ("Live SLA %", "SLA met % (closed out)")]):
+        p.add(f"kpi{i}", 24 + i * 207, 80, 195, 100, card(mname, label))
+    p.add("openByPriority", 24, 192, 400, 250,
+          chart("clusteredBarChart", {"Category": [proj(LT("Priority"), "Priority")], "Y": [proj(Mx("Live Open"), "Open tickets")]},
+                sort=[(LT("Priority"), "Ascending")],
+                objects={**bar_color(BLUE), "labels": [{"properties": {"show": lit(True), "labelDisplayUnits": lit(1.0)}}]}),
+          title="Open tickets by priority")
+    p.add("byCategory", 436, 192, 400, 250,
+          chart("clusteredBarChart", {"Category": [proj(LT("Category"), "Category")], "Y": [proj(Mx("Live Tickets"), "Tickets")]},
+                sort=[(Mx("Live Tickets"), "Descending")],
+                objects={**bar_color(BLUE), "labels": [{"properties": {"show": lit(True), "labelDisplayUnits": lit(1.0)}}]}),
+          title="Tickets by category (set by the keyword rules)")
+    p.add("tryIt", 848, 192, 408, 250, textbox([
+        ("Try it", 12, True, "#1F3A5F"),
+        ("1. Submit a request (no sign-in needed):", 10, False, INK),
+        (form, 9, False, BLUE),
+        ("2. You get a confirmation email with your ticket number within about a minute.", 10, False, INK),
+        ("3. Refresh this report to see the ticket appear below.", 10, False, INK),
+        ("Rules: keywords set the category; impact x urgency sets the priority and SLA (P1 4 h, P2 8 h, P3 72 h, P4 120 h).",
+         9, False, INK2)]))
+    p.add("ticketTable", 24, 454, 1232, 254,
+          chart("tableEx", {"Values": [proj(LT("Ticket")), proj(LT("Category")), proj(LT("Priority")), proj(LT("Status")),
+                                       proj(LT("OpenedAt"), "Opened (UTC)"), proj(LT("SlaDueAt"), "SLA due (UTC)"),
+                                       proj(LT("MetSLA"), "Met SLA"), proj(LT("ResolutionHours"), "Hours to resolve")]},
+                sort=[(LT("Ticket"), "Descending")],
+                objects={"total": [{"properties": {"totals": lit(False)}}]}),
+          title="Tickets (newest first)")
+    return p
 
 
 def theme():

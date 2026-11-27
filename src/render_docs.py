@@ -92,8 +92,11 @@ def live_sections():
     links = json.loads(links_file.read_text()) if links_file.exists() else {}
     lines = []
     if links.get("form_url"):
-        lines.append(f"- **Submit a test IT request:** [{links['form_url']}]({links['form_url']}). "
-                     "You'll get a confirmation email with your ticket ID within a minute.")
+        until = f" The live desk runs on a trial tenant until {links['live_until']}." if links.get("live_until") else ""
+        lines.append(f"- **Submit a test IT request:** [open the form]({links['form_url']}). No account needed. "
+                     "You'll get a confirmation email with your ticket number within a minute, and the ticket appears on the "
+                     f"dashboard's Live Desk page after a refresh.{until} How it works and the test log: "
+                     "[power-automate/README.md](power-automate/README.md).")
     else:
         lines.append("- **Live service desk:** being set up. See [power-automate/](power-automate/).")
     if links.get("dashboard_url"):

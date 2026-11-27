@@ -128,6 +128,34 @@ table Metrics
 		formatString: +#,0.0;-#,0.0;0.0
 		lineageTag: 08b21c85-833d-514a-8fe6-cffca056ca19
 
+	measure 'Live Tickets' = COUNTROWS('Live Tickets') + 0
+		formatString: #,0
+		lineageTag: 28608bc5-8f95-5e38-b0d8-207a9276da4d
+
+	measure 'Live Open' = CALCULATE(COUNTROWS('Live Tickets'), NOT 'Live Tickets'[Status] IN {"Resolved", "Closed"}) + 0
+		formatString: #,0
+		lineageTag: 2eef7154-2a10-515b-a304-9fd0e59950c4
+
+	measure 'Live At Risk' = CALCULATE(COUNTROWS('Live Tickets'), NOT 'Live Tickets'[Status] IN {"Resolved", "Closed"}, FILTER('Live Tickets', 'Live Tickets'[WarnAt] <= UTCNOW() || 'Live Tickets'[SlaDueAt] <= UTCNOW())) + 0
+		formatString: #,0
+		lineageTag: 7ec5c0a2-aea4-54a7-92fe-b22f86dd0e6a
+
+	measure 'Live SLA Breaches' = CALCULATE(COUNTROWS('Live Tickets'), 'Live Tickets'[MetSLA] = "No") + 0
+		formatString: #,0
+		lineageTag: c2c8247d-4922-5647-a1db-be0414feedea
+
+	measure 'Live Resolved' = CALCULATE(COUNTROWS('Live Tickets'), 'Live Tickets'[Status] IN {"Resolved", "Closed"}) + 0
+		formatString: #,0
+		lineageTag: 7bd439b4-6717-5e73-9bf3-0fd3856742c7
+
+	measure 'Live SLA %' = DIVIDE(CALCULATE(COUNTROWS('Live Tickets'), 'Live Tickets'[MetSLA] = "Yes"), CALCULATE(COUNTROWS('Live Tickets'), 'Live Tickets'[MetSLA] IN {"Yes", "No"}))
+		formatString: 0.0%
+		lineageTag: f7c61dff-44b6-569a-b22c-0294db67b94d
+
+	measure 'Live Median Resolution (h)' = MEDIAN('Live Tickets'[ResolutionHours])
+		formatString: #,0.0
+		lineageTag: 330f5d9d-687c-52a6-8b01-0ceb06b24bc1
+
 	column Placeholder
 		dataType: string
 		isHidden

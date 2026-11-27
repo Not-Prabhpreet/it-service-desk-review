@@ -4,7 +4,8 @@
     "serviceOverview",
     "slaResolution",
     "recurringIssues",
-    "problemReview"
+    "problemReview",
+    "liveDesk"
   ],
   "activePageName": "serviceOverview"
 }
