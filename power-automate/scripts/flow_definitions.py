@@ -70,12 +70,16 @@ def new_ticket(c):
     A["Get_keyword_rules"] = op("sp", "GetItems", {"dataset": site, "table": L["Desk Rules - Keywords"], "$top": 500})
     A["Match_keywords"] = {"type": "Query", "inputs": {"from": "@outputs('Get_keyword_rules')?['body/value']",
                                                       "where": "@contains(outputs('Text_to_match'), toLower(item()?['Title']))"}}
+    A["Match_service"] = {"type": "Query", "inputs": {"from": "@outputs('Get_keyword_rules')?['body/value']",
+                                                     "where": "@contains(toLower(outputs('Answers')?['service']), toLower(item()?['Title']))"}}
     A["Get_impact_rules"] = op("sp", "GetItems", {"dataset": site, "table": L["Desk Rules - Impact"], "$top": 500})
     A["Match_impact"] = {"type": "Query", "inputs": {"from": "@outputs('Get_impact_rules')?['body/value']",
                                                     "where": "@contains(outputs('Text_to_match'), toLower(item()?['Title']))"}}
     A["Match_high_impact"] = {"type": "Query", "inputs": {"from": "@body('Match_impact')",
                                                          "where": "@equals(item()?['Impact'], 'High')"}}
-    A["Category"] = {"type": "Compose", "inputs": "@if(empty(body('Match_keywords')), 'Other', first(body('Match_keywords'))?['Category'])"}
+    # The service the requester picked wins; the description is only used when the service doesn't map.
+    A["Category"] = {"type": "Compose", "inputs": "@if(not(empty(body('Match_service'))), first(body('Match_service'))?['Category'], "
+                                                  "if(empty(body('Match_keywords')), 'Other', first(body('Match_keywords'))?['Category']))"}
     A["Impact"] = {"type": "Compose", "inputs": "@if(not(empty(body('Match_high_impact'))), 'High', if(empty(body('Match_impact')), 'Low', 'Medium'))"}
     A["Urgency"] = {"type": "Compose", "inputs": "@first(split(outputs('Answers')?['urgency'], ' '))"}
     A["Get_priority_rule"] = op("sp", "GetItems", {
@@ -193,7 +197,7 @@ def daily_digest(c):
         A[f"Open_P{i}"] = {"type": "Query", "inputs": {"from": "@outputs('Get_open_tickets')?['body/value']",
                                                       "where": f"@equals(item()?['Priority']?['Value'], '{p}')"}}
     A["At_risk"] = {"type": "Query", "inputs": {"from": "@outputs('Get_open_tickets')?['body/value']",
-                                               "where": "@lessOrEqual(ticks(item()?['WarnAt']), ticks(utcNow()))"}}
+                                               "where": "@lessOrEquals(ticks(item()?['WarnAt']), ticks(utcNow()))"}}
     A["At_risk_rows"] = {"type": "Select", "inputs": {"from": "@body('At_risk')", "select": {
         "Ticket": "@item()?['Title']", "Priority": "@item()?['Priority']?['Value']", "Status": "@item()?['Status']?['Value']",
         "Assigned to": "@item()?['AssignedTo']", "SLA due": "@" + local("item()?['SlaDueAt']", tz)}}}

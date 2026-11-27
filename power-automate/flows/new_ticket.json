@@ -102,6 +102,18 @@
         ]
       }
     },
+    "Match_service": {
+      "type": "Query",
+      "inputs": {
+        "from": "@outputs('Get_keyword_rules')?['body/value']",
+        "where": "@contains(toLower(outputs('Answers')?['service']), toLower(item()?['Title']))"
+      },
+      "runAfter": {
+        "Match_keywords": [
+          "Succeeded"
+        ]
+      }
+    },
     "Get_impact_rules": {
       "type": "OpenApiConnection",
       "inputs": {
@@ -118,7 +130,7 @@
         "authentication": "@parameters('$authentication')"
       },
       "runAfter": {
-        "Match_keywords": [
+        "Match_service": [
           "Succeeded"
         ]
       }
@@ -149,7 +161,7 @@
     },
     "Category": {
       "type": "Compose",
-      "inputs": "@if(empty(body('Match_keywords')), 'Other', first(body('Match_keywords'))?['Category'])",
+      "inputs": "@if(not(empty(body('Match_service'))), first(body('Match_service'))?['Category'], if(empty(body('Match_keywords')), 'Other', first(body('Match_keywords'))?['Category']))",
       "runAfter": {
         "Match_high_impact": [
           "Succeeded"
