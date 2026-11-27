@@ -316,7 +316,7 @@ def chart(vtype, roles, sort=None, objects=None, drill=True):
 
 def card(measure, label):
     return chart("card", {"Values": [proj(Mx(measure), label)]}, objects={
-        "labels": [{"properties": {"fontSize": lit(22.0), "color": color(INK)}}],
+        "labels": [{"properties": {"fontSize": lit(22.0), "color": color(INK), "labelDisplayUnits": lit(1.0)}}],
         "categoryLabels": [{"properties": {"show": lit(True), "fontSize": lit(10.0), "color": color(INK2)}}],
     })
 
@@ -378,7 +378,7 @@ def build_pages(metrics):
           chart("clusteredBarChart", {"Category": [proj(C("Priority", "priority_short"), "Priority")],
                                       "Y": [proj(Mx("Tickets"))]},
                 sort=[(C("Priority", "priority_short"), "Ascending")],
-                objects={**bar_color(BLUE), "labels": [{"properties": {"show": lit(True)}}]}),
+                objects={**bar_color(BLUE), "labels": [{"properties": {"show": lit(True), "labelDisplayUnits": lit(1.0)}}]}),
           title="Tickets by priority")
     p.add("monthlyTable", 436, 454, 820, 254,
           chart("tableEx", {"Values": [proj(C("Date", "month_name"), "Month"), proj(Mx("Tickets")),
@@ -397,19 +397,19 @@ def build_pages(metrics):
           chart("clusteredBarChart", {"Category": [proj(C("Priority", "priority_short"), "Priority")],
                                       "Y": [proj(Mx("SLA %"), "SLA met %")]},
                 sort=[(C("Priority", "priority_short"), "Ascending")],
-                objects={**bar_color(BLUE), "labels": [{"properties": {"show": lit(True)}}]}),
+                objects={**bar_color(BLUE), "labels": [{"properties": {"show": lit(True), "labelDisplayUnits": lit(1.0)}}]}),
           title="SLA met % by priority")
     p.add("slaByCategory", 436, 80, 400, 300,
           chart("clusteredBarChart", {"Category": [proj(cat, "Category")], "Y": [proj(Mx("SLA %"), "SLA met %")]},
                 sort=[(Mx("SLA %"), "Ascending")],
-                objects={**bar_color(BLUE), "labels": [{"properties": {"show": lit(True)}}]}),
+                objects={**bar_color(BLUE), "labels": [{"properties": {"show": lit(True), "labelDisplayUnits": lit(1.0)}}]}),
           title="SLA met % - top 10 categories by volume",
           filters=[cmp_filter("top10cat", C("Category", "volume_rank"), 4, 10)])
     p.add("resolutionDist", 848, 80, 408, 300,
           chart("clusteredColumnChart", {"Category": [proj(C("Incident", "resolution_bucket"), "Time to resolve")],
                                          "Y": [proj(Mx("Tickets"))]},
                 sort=[(C("Incident", "resolution_bucket"), "Ascending")],
-                objects={**bar_color(BLUE), "labels": [{"properties": {"show": lit(True)}}]}),
+                objects={**bar_color(BLUE), "labels": [{"properties": {"show": lit(True), "labelDisplayUnits": lit(1.0)}}]}),
           title="Resolution time distribution")
     p.add("worstGroups", 24, 392, 700, 316,
           chart("tableEx", {"Values": [proj(grp, "Assignment group"), proj(Mx("Tickets")), proj(Mx("SLA %"), "SLA met %"),
@@ -444,7 +444,7 @@ def build_pages(metrics):
     p.add("topBreaches", 856, 192, 400, 300,
           chart("clusteredBarChart", {"Category": [proj(cat, "Category")], "Y": [proj(Mx("SLA Breaches"))]},
                 sort=[(Mx("SLA Breaches"), "Descending")],
-                objects={**bar_color(ORANGE), "labels": [{"properties": {"show": lit(True)}}]}),
+                objects={**bar_color(ORANGE), "labels": [{"properties": {"show": lit(True), "labelDisplayUnits": lit(1.0)}}]}),
           title="Top drivers of SLA breaches (top 10 categories by volume)",
           filters=[cmp_filter("top10", C("Category", "volume_rank"), 4, 10)])
     p.add("repeatTable", 24, 504, 1232, 204,
@@ -465,7 +465,7 @@ def build_pages(metrics):
                 f"Largest source of SLA breaches · first line = {fl} · page filtered to {pc}")
     p.filters.append(in_filter("problemCategory", cat, [pc]))
     for i, (mname, label) in enumerate([("Ticket Share", "Share of all tickets"), ("Breach Share", "Share of all SLA breaches"),
-                                        ("Breach Rate", "Breach rate"), ("First-line Resolution %", f"Resolved by first line ({fl})"),
+                                        ("Breach Rate", "Breach rate"), ("First-line Resolution %", "First-line resolved"),
                                         ("Median Resolution (h)", "Median hours to resolve"), ("Repeat Rate", "Repeat tickets")]):
         p.add(f"kpi{i}", 24 + i * 207, 80, 195, 100, card(mname, label))
     p.add("trend", 24, 192, 610, 260,

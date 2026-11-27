@@ -28,7 +28,7 @@
               },
               "queryRef": "Metrics.First-line Resolution %",
               "nativeQueryRef": "First-line Resolution %",
-              "displayName": "Resolved by first line (Group 70)"
+              "displayName": "First-line resolved"
             }
           ]
         }
@@ -54,6 +54,13 @@
                       "Value": "'#0b0b0b'"
                     }
                   }
+                }
+              }
+            },
+            "labelDisplayUnits": {
+              "expr": {
+                "Literal": {
+                  "Value": "1.0D"
                 }
               }
             }
