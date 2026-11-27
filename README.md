@@ -4,6 +4,8 @@ Analysis of 24,437 real ServiceNow incidents (Mar 2016 - May 2016): how the desk
 
 Try the live desk: [submit an IT request](https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=blFvFKeEyEufWgTLnZgJHbY7vi8ByM1FktdPzAle14RUOVZJNFA1SEhWM0Y3NkxIVk43NjFPRTBFNC4u). No account needed; you'll get a ticket number by email within a minute (it runs on a trial tenant until 2026-12-27). How it works: [power-automate/README.md](power-automate/README.md).
 
+Live Power BI dashboard: [open it in your browser](https://app.powerbi.com/view?r=eyJrIjoiODI0OWMwMzQtODRkZC00NmEzLTgzMjItODBmNDE2Y2U5OWEyIiwidCI6IjE0NmY1MTZlLTg0YTctNGJjOC05ZjVhLTA0Y2I5ZDk4MDkxZCJ9).
+
 Dashboard as a PDF: [powerbi/ServiceDesk.pdf](powerbi/ServiceDesk.pdf).
 
 ## Data

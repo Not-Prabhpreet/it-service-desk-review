@@ -97,7 +97,7 @@ def live_sections():
                      f"a ticket number by email within a minute{until}. How it works: "
                      "[power-automate/README.md](power-automate/README.md).")
     if links.get("dashboard_url"):
-        lines.append(f"Live dashboard: {links['dashboard_url']}")
+        lines.append(f"Live Power BI dashboard: [open it in your browser]({links['dashboard_url']}).")
     pdf = ROOT / "powerbi" / "ServiceDesk.pdf"
     if pdf.exists():
         lines.append("Dashboard as a PDF: [powerbi/ServiceDesk.pdf](powerbi/ServiceDesk.pdf).")
