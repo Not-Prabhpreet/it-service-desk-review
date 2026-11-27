@@ -197,7 +197,7 @@ def daily_digest(c):
         A[f"Open_P{i}"] = {"type": "Query", "inputs": {"from": "@outputs('Get_open_tickets')?['body/value']",
                                                       "where": f"@equals(item()?['Priority']?['Value'], '{p}')"}}
     A["At_risk"] = {"type": "Query", "inputs": {"from": "@outputs('Get_open_tickets')?['body/value']",
-                                               "where": "@lessOrEquals(ticks(item()?['WarnAt']), ticks(utcNow()))"}}
+                                               "where": "@or(lessOrEquals(ticks(item()?['WarnAt']), ticks(utcNow())), lessOrEquals(ticks(item()?['SlaDueAt']), ticks(utcNow())))"}}
     A["At_risk_rows"] = {"type": "Select", "inputs": {"from": "@body('At_risk')", "select": {
         "Ticket": "@item()?['Title']", "Priority": "@item()?['Priority']?['Value']", "Status": "@item()?['Status']?['Value']",
         "Assigned to": "@item()?['AssignedTo']", "SLA due": "@" + local("item()?['SlaDueAt']", tz)}}}
