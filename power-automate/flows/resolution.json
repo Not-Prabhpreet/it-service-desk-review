@@ -1,0 +1,133 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "$connections": {
+      "defaultValue": {},
+      "type": "Object"
+    },
+    "$authentication": {
+      "defaultValue": {},
+      "type": "SecureObject"
+    }
+  },
+  "triggers": {
+    "When_a_ticket_is_modified": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_sharepointonline",
+          "operationId": "GetOnUpdatedItems",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+        },
+        "parameters": {
+          "dataset": "https://prabh272002gmail.sharepoint.com",
+          "table": "0d510661-3dad-4d74-8962-30027bf8b65f"
+        },
+        "authentication": "@parameters('$authentication')"
+      },
+      "recurrence": {
+        "frequency": "Minute",
+        "interval": 1
+      },
+      "splitOn": "@triggerOutputs()?['body/value']"
+    }
+  },
+  "actions": {
+    "If_newly_resolved": {
+      "type": "If",
+      "runAfter": {},
+      "expression": {
+        "and": [
+          {
+            "equals": [
+              "@triggerOutputs()?['body/Status/Value']",
+              "Resolved"
+            ]
+          },
+          {
+            "equals": [
+              "@empty(triggerOutputs()?['body/ResolvedAt'])",
+              true
+            ]
+          }
+        ]
+      },
+      "actions": {
+        "Now": {
+          "type": "Compose",
+          "inputs": "@utcNow()",
+          "runAfter": {}
+        },
+        "Hours": {
+          "type": "Compose",
+          "inputs": "@div(float(sub(ticks(outputs('Now')), ticks(triggerOutputs()?['body/OpenedAt']))), 36000000000.0)",
+          "runAfter": {
+            "Now": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Met_SLA": {
+          "type": "Compose",
+          "inputs": "@if(less(ticks(outputs('Now')), ticks(triggerOutputs()?['body/SlaDueAt'])), 'Yes', 'No')",
+          "runAfter": {
+            "Hours": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Record_resolution": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "PatchItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "https://prabh272002gmail.sharepoint.com",
+              "table": "0d510661-3dad-4d74-8962-30027bf8b65f",
+              "id": "@triggerOutputs()?['body/ID']",
+              "item/Title": "@triggerOutputs()?['body/Title']",
+              "item/ResolvedAt": "@outputs('Now')",
+              "item/ResolutionHours": "@outputs('Hours')",
+              "item/MetSLA/Value": "@outputs('Met_SLA')"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Met_SLA": [
+              "Succeeded"
+            ]
+          }
+        },
+        "Email_requester": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_office365",
+              "operationId": "SendEmailV2",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+            },
+            "parameters": {
+              "emailMessage/To": "@triggerOutputs()?['body/RequesterEmail']",
+              "emailMessage/Subject": "[@{triggerOutputs()?['body/Title']}] Your IT request is resolved",
+              "emailMessage/Body": "<div style='font-family:Segoe UI,Arial,sans-serif;font-size:14px;color:#1f2937'><p>Hi @{triggerOutputs()?['body/RequesterName']},</p><p>Your request <b>@{triggerOutputs()?['body/Title']}</b> has been resolved.</p><p><b>What we did:</b><br>@{coalesce(triggerOutputs()?['body/ResolutionNotes'], 'See your ticket for details.')}</p><p>Time to resolve: <b>@{formatNumber(outputs('Hours'), '0.0')} hours</b> (target met: @{outputs('Met_SLA')}).</p><p>If the problem isn't fixed, reply within 5 days and quote your ticket number to reopen it.</p><p>IT Service Desk (demo)</p></div>",
+              "emailMessage/Importance": "Normal"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Record_resolution": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "else": {
+        "actions": {}
+      }
+    }
+  }
+}

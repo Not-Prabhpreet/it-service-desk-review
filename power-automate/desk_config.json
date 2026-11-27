@@ -11,14 +11,21 @@
     "Desk Rules - Impact": "61da913a-49f1-4c06-8424-a78c7eae4c62",
     "Desk Rules - Priority": "6ba35898-8d0d-4f89-be61-c77dad67e6f5"
   },
-  "form_id": "",
-  "form_url": "",
+  "form_id": "blFvFKeEyEufWgTLnZgJHbY7vi8ByM1FktdPzAle14RUOVZJNFA1SEhWM0Y3NkxIVk43NjFPRTBFNC4u",
+  "form_url": "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=blFvFKeEyEufWgTLnZgJHbY7vi8ByM1FktdPzAle14RUOVZJNFA1SEhWM0Y3NkxIVk43NjFPRTBFNC4u",
   "questions": {
-    "name": "",
-    "email": "",
-    "service": "",
-    "description": "",
-    "urgency": ""
+    "name": "r447c594e4c2d408096c0af0c31bd35a4",
+    "email": "r95dcdc93393d476394e9436f15ed50a1",
+    "service": "rd2e01f08082b41279262e68e58840584",
+    "description": "r0a1b7f7544074e10bfc9149cb3ccdd24",
+    "urgency": "r033137a8aaf14250b321327ef5bfa403"
   },
-  "site_id": "prabh272002gmail.sharepoint.com,ba931c96-42f7-407e-8e11-14464070e492,8ac82fa8-5112-4216-ba02-a04d17c195d0"
+  "site_id": "prabh272002gmail.sharepoint.com,ba931c96-42f7-407e-8e11-14464070e492,8ac82fa8-5112-4216-ba02-a04d17c195d0",
+  "environment": "Default-146f516e-84a7-4bc8-9f5a-04cb9d98091d",
+  "flows": {
+    "Desk - New ticket": "02c8170f-80dc-4e33-a332-d37f67c78e5f",
+    "Desk - SLA watch": "eb29d76f-b6fc-4491-8108-590d785d0bab",
+    "Desk - Resolution": "62f2b894-c4ea-4cdb-aa17-e7ded05e50b7",
+    "Desk - Daily digest": "a9168295-c835-4edc-a7c7-962917b871f3"
+  }
 }

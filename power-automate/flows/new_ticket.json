@@ -1,0 +1,355 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "$connections": {
+      "defaultValue": {},
+      "type": "Object"
+    },
+    "$authentication": {
+      "defaultValue": {},
+      "type": "SecureObject"
+    }
+  },
+  "triggers": {
+    "When_a_new_response_is_submitted": {
+      "type": "OpenApiConnectionWebhook",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_microsoftforms",
+          "operationId": "CreateFormWebhook",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_microsoftforms"
+        },
+        "parameters": {
+          "form_id": "blFvFKeEyEufWgTLnZgJHbY7vi8ByM1FktdPzAle14RUOVZJNFA1SEhWM0Y3NkxIVk43NjFPRTBFNC4u"
+        },
+        "authentication": "@parameters('$authentication')"
+      },
+      "splitOn": "@triggerOutputs()?['body/value']"
+    }
+  },
+  "actions": {
+    "Get_response_details": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_microsoftforms",
+          "operationId": "GetFormResponseById",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_microsoftforms"
+        },
+        "parameters": {
+          "form_id": "blFvFKeEyEufWgTLnZgJHbY7vi8ByM1FktdPzAle14RUOVZJNFA1SEhWM0Y3NkxIVk43NjFPRTBFNC4u",
+          "response_id": "@triggerOutputs()?['body/resourceData/responseId']"
+        },
+        "authentication": "@parameters('$authentication')"
+      },
+      "runAfter": {}
+    },
+    "Answers": {
+      "type": "Compose",
+      "inputs": {
+        "name": "@outputs('Get_response_details')?['body/r447c594e4c2d408096c0af0c31bd35a4']",
+        "email": "@outputs('Get_response_details')?['body/r95dcdc93393d476394e9436f15ed50a1']",
+        "service": "@outputs('Get_response_details')?['body/rd2e01f08082b41279262e68e58840584']",
+        "description": "@outputs('Get_response_details')?['body/r0a1b7f7544074e10bfc9149cb3ccdd24']",
+        "urgency": "@outputs('Get_response_details')?['body/r033137a8aaf14250b321327ef5bfa403']"
+      },
+      "runAfter": {
+        "Get_response_details": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Text_to_match": {
+      "type": "Compose",
+      "inputs": "@toLower(concat(outputs('Answers')?['service'], ' ', outputs('Answers')?['description']))",
+      "runAfter": {
+        "Answers": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Get_keyword_rules": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_sharepointonline",
+          "operationId": "GetItems",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+        },
+        "parameters": {
+          "dataset": "https://prabh272002gmail.sharepoint.com",
+          "table": "dd54cea2-1df4-4928-a807-e4ef8728e3f9",
+          "$top": 500
+        },
+        "authentication": "@parameters('$authentication')"
+      },
+      "runAfter": {
+        "Text_to_match": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Match_keywords": {
+      "type": "Query",
+      "inputs": {
+        "from": "@outputs('Get_keyword_rules')?['body/value']",
+        "where": "@contains(outputs('Text_to_match'), toLower(item()?['Title']))"
+      },
+      "runAfter": {
+        "Get_keyword_rules": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Get_impact_rules": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_sharepointonline",
+          "operationId": "GetItems",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+        },
+        "parameters": {
+          "dataset": "https://prabh272002gmail.sharepoint.com",
+          "table": "61da913a-49f1-4c06-8424-a78c7eae4c62",
+          "$top": 500
+        },
+        "authentication": "@parameters('$authentication')"
+      },
+      "runAfter": {
+        "Match_keywords": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Match_impact": {
+      "type": "Query",
+      "inputs": {
+        "from": "@outputs('Get_impact_rules')?['body/value']",
+        "where": "@contains(outputs('Text_to_match'), toLower(item()?['Title']))"
+      },
+      "runAfter": {
+        "Get_impact_rules": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Match_high_impact": {
+      "type": "Query",
+      "inputs": {
+        "from": "@body('Match_impact')",
+        "where": "@equals(item()?['Impact'], 'High')"
+      },
+      "runAfter": {
+        "Match_impact": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Category": {
+      "type": "Compose",
+      "inputs": "@if(empty(body('Match_keywords')), 'Other', first(body('Match_keywords'))?['Category'])",
+      "runAfter": {
+        "Match_high_impact": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Impact": {
+      "type": "Compose",
+      "inputs": "@if(not(empty(body('Match_high_impact'))), 'High', if(empty(body('Match_impact')), 'Low', 'Medium'))",
+      "runAfter": {
+        "Category": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Urgency": {
+      "type": "Compose",
+      "inputs": "@first(split(outputs('Answers')?['urgency'], ' '))",
+      "runAfter": {
+        "Impact": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Get_priority_rule": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_sharepointonline",
+          "operationId": "GetItems",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+        },
+        "parameters": {
+          "dataset": "https://prabh272002gmail.sharepoint.com",
+          "table": "6ba35898-8d0d-4f89-be61-c77dad67e6f5",
+          "$filter": "Impact eq '@{outputs('Impact')}' and Urgency eq '@{outputs('Urgency')}'",
+          "$top": 1
+        },
+        "authentication": "@parameters('$authentication')"
+      },
+      "runAfter": {
+        "Urgency": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Rule": {
+      "type": "Compose",
+      "inputs": "@first(outputs('Get_priority_rule')?['body/value'])",
+      "runAfter": {
+        "Get_priority_rule": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Now": {
+      "type": "Compose",
+      "inputs": "@utcNow()",
+      "runAfter": {
+        "Rule": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Create_ticket": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_sharepointonline",
+          "operationId": "PostItem",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+        },
+        "parameters": {
+          "dataset": "https://prabh272002gmail.sharepoint.com",
+          "table": "0d510661-3dad-4d74-8962-30027bf8b65f",
+          "item/Title": "New",
+          "item/RequesterName": "@outputs('Answers')?['name']",
+          "item/RequesterEmail": "@trim(outputs('Answers')?['email'])",
+          "item/Service": "@outputs('Answers')?['service']",
+          "item/Description": "@outputs('Answers')?['description']",
+          "item/Urgency/Value": "@outputs('Urgency')",
+          "item/Impact/Value": "@outputs('Impact')",
+          "item/Category": "@outputs('Category')",
+          "item/Priority/Value": "@outputs('Rule')?['Priority']",
+          "item/AssignedTo": "admin@prabh272002gmail.onmicrosoft.com",
+          "item/Status/Value": "New",
+          "item/OpenedAt": "@outputs('Now')",
+          "item/SlaDueAt": "@addHours(outputs('Now'), int(outputs('Rule')?['ResolveHours']))",
+          "item/WarnAt": "@addMinutes(outputs('Now'), mul(int(outputs('Rule')?['ResolveHours']), 45))",
+          "item/WarnSent": false,
+          "item/Escalated": false,
+          "item/ResponseId": "@triggerOutputs()?['body/resourceData/responseId']"
+        },
+        "authentication": "@parameters('$authentication')"
+      },
+      "runAfter": {
+        "Now": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Ticket_ID": {
+      "type": "Compose",
+      "inputs": "@concat('INC-', formatNumber(outputs('Create_ticket')?['body/ID'], '00000'))",
+      "runAfter": {
+        "Create_ticket": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Set_ticket_ID": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_sharepointonline",
+          "operationId": "PatchItem",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+        },
+        "parameters": {
+          "dataset": "https://prabh272002gmail.sharepoint.com",
+          "table": "0d510661-3dad-4d74-8962-30027bf8b65f",
+          "id": "@outputs('Create_ticket')?['body/ID']",
+          "item/Title": "@outputs('Ticket_ID')"
+        },
+        "authentication": "@parameters('$authentication')"
+      },
+      "runAfter": {
+        "Ticket_ID": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Email_requester": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_office365",
+          "operationId": "SendEmailV2",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+        },
+        "parameters": {
+          "emailMessage/To": "@trim(outputs('Answers')?['email'])",
+          "emailMessage/Subject": "[@{outputs('Ticket_ID')}] We've received your IT request",
+          "emailMessage/Body": "<div style='font-family:Segoe UI,Arial,sans-serif;font-size:14px;color:#1f2937'><p>Hi @{outputs('Answers')?['name']},</p><p>Thanks for contacting the IT service desk. Your request is logged as <b>@{outputs('Ticket_ID')}</b>.</p><table cellpadding='4'><tr><td>Category</td><td><b>@{outputs('Category')}</b></td></tr><tr><td>Priority</td><td><b>@{outputs('Rule')?['Priority']}</b> (impact @{outputs('Impact')}, urgency @{outputs('Urgency')})</td></tr><tr><td>Target resolution</td><td><b>@{convertFromUtc(outputs('Create_ticket')?['body/SlaDueAt'], 'Newfoundland Standard Time', 'ddd d MMM yyyy, HH:mm')}</b> (Newfoundland time)</td></tr></table><p>We'll email you again when it's resolved. Reply to this email with screenshots or extra details and quote your ticket number.</p><p>IT Service Desk (demo)</p></div>",
+          "emailMessage/Importance": "Normal"
+        },
+        "authentication": "@parameters('$authentication')"
+      },
+      "runAfter": {
+        "Set_ticket_ID": [
+          "Succeeded"
+        ]
+      }
+    },
+    "If_P1_or_P2": {
+      "type": "If",
+      "expression": {
+        "or": [
+          {
+            "equals": [
+              "@outputs('Rule')?['Priority']",
+              "P1 Critical"
+            ]
+          },
+          {
+            "equals": [
+              "@outputs('Rule')?['Priority']",
+              "P2 High"
+            ]
+          }
+        ]
+      },
+      "actions": {
+        "Alert_lead": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_office365",
+              "operationId": "SendEmailV2",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+            },
+            "parameters": {
+              "emailMessage/To": "admin@prabh272002gmail.onmicrosoft.com",
+              "emailMessage/Subject": "HIGH PRIORITY @{outputs('Rule')?['Priority']}: @{outputs('Ticket_ID')} - @{outputs('Category')}",
+              "emailMessage/Body": "<div style='font-family:Segoe UI,Arial,sans-serif;font-size:14px;color:#1f2937'><p><b>New @{outputs('Rule')?['Priority']} ticket @{outputs('Ticket_ID')}</b></p><p>From: @{outputs('Answers')?['name']} (@{outputs('Answers')?['email']})<br>Service: @{outputs('Answers')?['service']}</p><p>@{outputs('Answers')?['description']}</p><p>SLA due: <b>@{convertFromUtc(outputs('Create_ticket')?['body/SlaDueAt'], 'Newfoundland Standard Time', 'ddd d MMM yyyy, HH:mm')}</b></p></div>",
+              "emailMessage/Importance": "High"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {}
+        }
+      },
+      "else": {
+        "actions": {}
+      },
+      "runAfter": {
+        "Email_requester": [
+          "Succeeded"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "$connections": {
+      "defaultValue": {},
+      "type": "Object"
+    },
+    "$authentication": {
+      "defaultValue": {},
+      "type": "SecureObject"
+    }
+  },
+  "triggers": {
+    "Every_15_minutes": {
+      "type": "Recurrence",
+      "recurrence": {
+        "frequency": "Minute",
+        "interval": 15
+      }
+    }
+  },
+  "actions": {
+    "Now": {
+      "type": "Compose",
+      "inputs": "@utcNow()",
+      "runAfter": {}
+    },
+    "Get_near_breach": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_sharepointonline",
+          "operationId": "GetItems",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+        },
+        "parameters": {
+          "dataset": "https://prabh272002gmail.sharepoint.com",
+          "table": "0d510661-3dad-4d74-8962-30027bf8b65f",
+          "$top": 500,
+          "$filter": "Status ne 'Resolved' and Status ne 'Closed' and WarnSent eq 0 and WarnAt le '@{outputs('Now')}' and SlaDueAt gt '@{outputs('Now')}'"
+        },
+        "authentication": "@parameters('$authentication')"
+      },
+      "runAfter": {
+        "Now": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Warn_each": {
+      "type": "Foreach",
+      "foreach": "@outputs('Get_near_breach')?['body/value']",
+      "actions": {
+        "Warn_assignee": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_office365",
+              "operationId": "SendEmailV2",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+            },
+            "parameters": {
+              "emailMessage/To": "@items('Warn_each')?['AssignedTo']",
+              "emailMessage/Subject": "SLA warning: @{items('Warn_each')?['Title']} is 75% through its SLA",
+              "emailMessage/Body": "<div style='font-family:Segoe UI,Arial,sans-serif;font-size:14px;color:#1f2937'><p>Ticket <b>@{items('Warn_each')?['Title']}</b> (@{items('Warn_each')?['Priority']?['Value']}, @{items('Warn_each')?['Category']}) will breach SLA at <b>@{convertFromUtc(items('Warn_each')?['SlaDueAt'], 'Newfoundland Standard Time', 'ddd d MMM yyyy, HH:mm')}</b>.</p><p>Requester: @{items('Warn_each')?['RequesterName']}<br>@{items('Warn_each')?['Description']}</p></div>",
+              "emailMessage/Importance": "High"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {}
+        },
+        "Mark_warned": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "PatchItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "https://prabh272002gmail.sharepoint.com",
+              "table": "0d510661-3dad-4d74-8962-30027bf8b65f",
+              "id": "@items('Warn_each')?['ID']",
+              "item/Title": "@items('Warn_each')?['Title']",
+              "item/WarnSent": true
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Warn_assignee": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "runAfter": {
+        "Get_near_breach": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Get_breached": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_sharepointonline",
+          "operationId": "GetItems",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+        },
+        "parameters": {
+          "dataset": "https://prabh272002gmail.sharepoint.com",
+          "table": "0d510661-3dad-4d74-8962-30027bf8b65f",
+          "$top": 500,
+          "$filter": "Status ne 'Resolved' and Status ne 'Closed' and Escalated eq 0 and SlaDueAt le '@{outputs('Now')}'"
+        },
+        "authentication": "@parameters('$authentication')"
+      },
+      "runAfter": {
+        "Warn_each": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Escalate_each": {
+      "type": "Foreach",
+      "foreach": "@outputs('Get_breached')?['body/value']",
+      "actions": {
+        "Escalate_to_lead": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_office365",
+              "operationId": "SendEmailV2",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+            },
+            "parameters": {
+              "emailMessage/To": "admin@prabh272002gmail.onmicrosoft.com",
+              "emailMessage/Subject": "SLA BREACHED: @{items('Escalate_each')?['Title']} (@{items('Escalate_each')?['Priority']?['Value']})",
+              "emailMessage/Body": "<div style='font-family:Segoe UI,Arial,sans-serif;font-size:14px;color:#1f2937'><p>Ticket <b>@{items('Escalate_each')?['Title']}</b> breached its SLA at <b>@{convertFromUtc(items('Escalate_each')?['SlaDueAt'], 'Newfoundland Standard Time', 'ddd d MMM yyyy, HH:mm')}</b> and is still <b>@{items('Escalate_each')?['Status']?['Value']}</b>.</p><p>Assigned to: @{items('Escalate_each')?['AssignedTo']}<br>Category: @{items('Escalate_each')?['Category']}<br>Requester: @{items('Escalate_each')?['RequesterName']}</p><p>@{items('Escalate_each')?['Description']}</p></div>",
+              "emailMessage/Importance": "High"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {}
+        },
+        "Mark_escalated": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "PatchItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "https://prabh272002gmail.sharepoint.com",
+              "table": "0d510661-3dad-4d74-8962-30027bf8b65f",
+              "id": "@items('Escalate_each')?['ID']",
+              "item/Title": "@items('Escalate_each')?['Title']",
+              "item/Escalated": true,
+              "item/MetSLA/Value": "No"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "runAfter": {
+            "Escalate_to_lead": [
+              "Succeeded"
+            ]
+          }
+        }
+      },
+      "runAfter": {
+        "Get_breached": [
+          "Succeeded"
+        ]
+      }
+    }
+  }
+}

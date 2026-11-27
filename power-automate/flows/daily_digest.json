@@ -1,0 +1,165 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "$connections": {
+      "defaultValue": {},
+      "type": "Object"
+    },
+    "$authentication": {
+      "defaultValue": {},
+      "type": "SecureObject"
+    }
+  },
+  "triggers": {
+    "Every_day_at_8am": {
+      "type": "Recurrence",
+      "recurrence": {
+        "frequency": "Day",
+        "interval": 1,
+        "timeZone": "Newfoundland Standard Time",
+        "startTime": "2026-11-28T08:00:00",
+        "schedule": {
+          "hours": [
+            "8"
+          ],
+          "minutes": [
+            0
+          ]
+        }
+      }
+    }
+  },
+  "actions": {
+    "Get_open_tickets": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_sharepointonline",
+          "operationId": "GetItems",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+        },
+        "parameters": {
+          "dataset": "https://prabh272002gmail.sharepoint.com",
+          "table": "0d510661-3dad-4d74-8962-30027bf8b65f",
+          "$top": 500,
+          "$filter": "Status ne 'Resolved' and Status ne 'Closed'"
+        },
+        "authentication": "@parameters('$authentication')"
+      },
+      "runAfter": {}
+    },
+    "Open_P1": {
+      "type": "Query",
+      "inputs": {
+        "from": "@outputs('Get_open_tickets')?['body/value']",
+        "where": "@equals(item()?['Priority']?['Value'], 'P1 Critical')"
+      },
+      "runAfter": {
+        "Get_open_tickets": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Open_P2": {
+      "type": "Query",
+      "inputs": {
+        "from": "@outputs('Get_open_tickets')?['body/value']",
+        "where": "@equals(item()?['Priority']?['Value'], 'P2 High')"
+      },
+      "runAfter": {
+        "Open_P1": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Open_P3": {
+      "type": "Query",
+      "inputs": {
+        "from": "@outputs('Get_open_tickets')?['body/value']",
+        "where": "@equals(item()?['Priority']?['Value'], 'P3 Moderate')"
+      },
+      "runAfter": {
+        "Open_P2": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Open_P4": {
+      "type": "Query",
+      "inputs": {
+        "from": "@outputs('Get_open_tickets')?['body/value']",
+        "where": "@equals(item()?['Priority']?['Value'], 'P4 Low')"
+      },
+      "runAfter": {
+        "Open_P3": [
+          "Succeeded"
+        ]
+      }
+    },
+    "At_risk": {
+      "type": "Query",
+      "inputs": {
+        "from": "@outputs('Get_open_tickets')?['body/value']",
+        "where": "@lessOrEqual(ticks(item()?['WarnAt']), ticks(utcNow()))"
+      },
+      "runAfter": {
+        "Open_P4": [
+          "Succeeded"
+        ]
+      }
+    },
+    "At_risk_rows": {
+      "type": "Select",
+      "inputs": {
+        "from": "@body('At_risk')",
+        "select": {
+          "Ticket": "@item()?['Title']",
+          "Priority": "@item()?['Priority']?['Value']",
+          "Status": "@item()?['Status']?['Value']",
+          "Assigned to": "@item()?['AssignedTo']",
+          "SLA due": "@convertFromUtc(item()?['SlaDueAt'], 'Newfoundland Standard Time', 'ddd d MMM yyyy, HH:mm')"
+        }
+      },
+      "runAfter": {
+        "At_risk": [
+          "Succeeded"
+        ]
+      }
+    },
+    "At_risk_table": {
+      "type": "Table",
+      "inputs": {
+        "from": "@body('At_risk_rows')",
+        "format": "HTML"
+      },
+      "runAfter": {
+        "At_risk_rows": [
+          "Succeeded"
+        ]
+      }
+    },
+    "Email_digest": {
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_office365",
+          "operationId": "SendEmailV2",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+        },
+        "parameters": {
+          "emailMessage/To": "admin@prabh272002gmail.onmicrosoft.com",
+          "emailMessage/Subject": "IT desk daily digest: @{length(outputs('Get_open_tickets')?['body/value'])} open, @{length(body('At_risk'))} at risk",
+          "emailMessage/Body": "<div style='font-family:Segoe UI,Arial,sans-serif;font-size:14px;color:#1f2937'><p><b>Open tickets: @{length(outputs('Get_open_tickets')?['body/value'])}</b></p><p>Backlog by priority</p><table cellpadding='4' border='1' style='border-collapse:collapse'><tr><td>P1 Critical</td><td><b>@{length(body('Open_P1'))}</b></td></tr><tr><td>P2 High</td><td><b>@{length(body('Open_P2'))}</b></td></tr><tr><td>P3 Moderate</td><td><b>@{length(body('Open_P3'))}</b></td></tr><tr><td>P4 Low</td><td><b>@{length(body('Open_P4'))}</b></td></tr></table><p>Tickets at risk (75%+ of SLA used or breached): <b>@{length(body('At_risk'))}</b></p>@{body('At_risk_table')}<p>Live list: https://prabh272002gmail.sharepoint.com/Lists/IT%20Tickets</p></div>",
+          "emailMessage/Importance": "Normal"
+        },
+        "authentication": "@parameters('$authentication')"
+      },
+      "runAfter": {
+        "At_risk_table": [
+          "Succeeded"
+        ]
+      }
+    }
+  }
+}

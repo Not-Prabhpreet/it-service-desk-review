@@ -17,6 +17,7 @@ CLIENTS = {
     "graph": ("14d82eec-204b-4c2f-b7e8-296a70dab67e",
               ["https://graph.microsoft.com/Sites.Manage.All", "https://graph.microsoft.com/User.Read"]),
     "flow": ("1950a258-227b-4e31-a9cf-717495945fc2", ["https://service.flow.microsoft.com//.default"]),
+    "powerapps": ("1950a258-227b-4e31-a9cf-717495945fc2", ["https://service.powerapps.com//.default"]),
 }
 
 
