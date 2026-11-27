@@ -92,25 +92,22 @@ def live_sections():
     links = json.loads(links_file.read_text()) if links_file.exists() else {}
     lines = []
     if links.get("form_url"):
-        until = f" The live desk runs on a trial tenant until {links['live_until']}." if links.get("live_until") else ""
-        lines.append(f"- **Submit a test IT request:** [open the form]({links['form_url']}). No account needed. "
-                     "You'll get a confirmation email with your ticket number within a minute, and the ticket appears on the "
-                     f"dashboard's Live Desk page after a refresh.{until} How it works and the test log: "
+        until = f" (it runs on a trial tenant until {links['live_until']})" if links.get("live_until") else ""
+        lines.append(f"Try the live desk: [submit an IT request]({links['form_url']}). No account needed; you'll get "
+                     f"a ticket number by email within a minute{until}. How it works: "
                      "[power-automate/README.md](power-automate/README.md).")
-    else:
-        lines.append("- **Live service desk:** being set up. See [power-automate/](power-automate/).")
     if links.get("dashboard_url"):
-        lines.append(f"- **Live dashboard:** [{links['dashboard_url']}]({links['dashboard_url']})")
+        lines.append(f"Live dashboard: {links['dashboard_url']}")
     pdf = ROOT / "powerbi" / "ServiceDesk.pdf"
     if pdf.exists():
-        lines.append("- **Dashboard PDF:** [powerbi/ServiceDesk.pdf](powerbi/ServiceDesk.pdf). Screenshots are below.")
+        lines.append("Dashboard as a PDF: [powerbi/ServiceDesk.pdf](powerbi/ServiceDesk.pdf).")
     shots = sorted((ROOT / "powerbi" / "screenshots").glob("*.png"))
     if shots:
-        shot_md = "\n\n".join(f"![{s.stem.replace('_', ' ')}](powerbi/screenshots/{s.name})" for s in shots)
+        shot_md = "\n\n".join(f"![{s.stem[3:].replace('_', ' ').title().replace('Sla', 'SLA')}](powerbi/screenshots/{s.name})" for s in shots)
     else:
         shot_md = ("Dashboard screenshots will appear here once exported. Meanwhile, the charts in "
                    "[docs/figures/](docs/figures/) come from the same numbers.")
-    return {"try_it": "\n".join(lines), "screenshots": shot_md}
+    return {"try_it": "\n\n".join(lines), "screenshots": shot_md}
 
 
 def main():
