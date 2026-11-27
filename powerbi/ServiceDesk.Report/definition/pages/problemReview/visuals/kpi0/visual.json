@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Ticket Share"
                 }
               },
-              "queryRef": "Measures.Ticket Share",
+              "queryRef": "Metrics.Ticket Share",
               "nativeQueryRef": "Ticket Share",
               "displayName": "Share of all tickets"
             }

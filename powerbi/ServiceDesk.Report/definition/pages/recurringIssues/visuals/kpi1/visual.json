@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Repeat Rate"
                 }
               },
-              "queryRef": "Measures.Repeat Rate",
+              "queryRef": "Metrics.Repeat Rate",
               "nativeQueryRef": "Repeat Rate",
               "displayName": "Repeat tickets (same caller + category, 7 days)"
             }

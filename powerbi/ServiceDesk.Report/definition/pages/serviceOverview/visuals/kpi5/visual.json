@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Backlog"
                 }
               },
-              "queryRef": "Measures.Backlog",
+              "queryRef": "Metrics.Backlog",
               "nativeQueryRef": "Backlog",
               "displayName": "Open backlog (end of period)"
             }

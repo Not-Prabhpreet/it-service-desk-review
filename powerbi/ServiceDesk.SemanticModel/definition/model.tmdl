@@ -6,7 +6,7 @@ model Model
 		legacyRedirects
 		returnErrorValuesAsNull
 
-annotation PBI_QueryOrder = ["DataFolder", "Incident", "Date", "Category", "Priority", "Assignment Group", "Projection", "Measures"]
+annotation PBI_QueryOrder = ["DataFolder", "Incident", "Date", "Category", "Priority", "Assignment Group", "Projection", "Metrics"]
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
@@ -16,4 +16,4 @@ ref table Category
 ref table Priority
 ref table 'Assignment Group'
 ref table Projection
-ref table Measures
+ref table Metrics

@@ -154,7 +154,7 @@ def tmdl_table(name, spec):
 
 
 def tmdl_measures(measures):
-    L = ["table Measures", f"\tlineageTag: {tag('t', 'Measures')}", ""]
+    L = ["table Metrics", f"\tlineageTag: {tag('t', 'Metrics')}", ""]
     for name, dax, fmt in measures:
         if dax.startswith("\n"):
             L.append(f"\tmeasure {q(name)} =")
@@ -165,9 +165,9 @@ def tmdl_measures(measures):
             L.append(f"\t\tformatString: {fmt}")
         L += [f"\t\tlineageTag: {tag('m', name)}", ""]
     L += ["\tcolumn Placeholder", "\t\tdataType: string", "\t\tisHidden",
-          f"\t\tlineageTag: {tag('c', 'Measures', 'Placeholder')}", "\t\tsummarizeBy: none",
+          f"\t\tlineageTag: {tag('c', 'Metrics', 'Placeholder')}", "\t\tsummarizeBy: none",
           "\t\tsourceColumn: Placeholder", "", "\t\tannotation SummarizationSetBy = Automatic", "",
-          "\tpartition Measures = m", "\t\tmode: import", "\t\tsource =",
+          "\tpartition Metrics = m", "\t\tmode: import", "\t\tsource =",
           '\t\t\t\t#table(type table [Placeholder = text], {})', "",
           "\tannotation PBI_ResultType = Table", ""]
     return "\n".join(L)
@@ -198,7 +198,7 @@ def build_model():
         shutil.rmtree(d)
     data_folder = str(CLEAN_DIR.resolve()) + "\\"
     write(d / "database.tmdl", "database\n\tcompatibilityLevel: 1600\n")
-    order = list(T) + ["Measures"]
+    order = list(T) + ["Metrics"]
     write(d / "model.tmdl", "\n".join([
         "model Model", "\tculture: en-US", "\tdefaultPowerBIDataSourceVersion: powerBI_V3",
         "\tsourceQueryCulture: en-US", "\tdataAccessOptions", "\t\tlegacyRedirects", "\t\treturnErrorValuesAsNull", "",
@@ -210,7 +210,7 @@ def build_model():
         f"\tlineageTag: {tag('e', 'DataFolder')}", "", "\tannotation PBI_ResultType = Text", ""]))
     for name, spec in T.items():
         write(d / "tables" / f"{name}.tmdl", tmdl_table(name, spec))
-    write(d / "tables" / "Measures.tmdl", tmdl_measures(M))
+    write(d / "tables" / "Metrics.tmdl", tmdl_measures(M))
     rel = []
     for ft, fc, tt, tc, active in RELATIONSHIPS:
         rel += [f"relationship {tag('r', ft, fc, tt, tc)}"]
@@ -250,7 +250,7 @@ def C(entity, prop):
 
 
 def Mx(prop):
-    return {"Measure": {"Expression": {"SourceRef": {"Entity": "Measures"}}, "Property": prop}}
+    return {"Measure": {"Expression": {"SourceRef": {"Entity": "Metrics"}}, "Property": prop}}
 
 
 def proj(field, display=None):
@@ -473,8 +473,8 @@ def build_pages(metrics):
           chart("lineChart", {"Category": [proj(C("Date", "week_start"), "Week starting")],
                               "Y": [proj(Mx("Breach Rate"), f"{pc} breach rate"),
                                     proj(Mx("Desk Breach Rate"), "Whole desk breach rate")]},
-                objects={"dataPoint": [{"selector": {"metadata": "Measures.Breach Rate"}, "properties": {"fill": color(ORANGE)}},
-                                       {"selector": {"metadata": "Measures.Desk Breach Rate"}, "properties": {"fill": color(GREY)}}],
+                objects={"dataPoint": [{"selector": {"metadata": "Metrics.Breach Rate"}, "properties": {"fill": color(ORANGE)}},
+                                       {"selector": {"metadata": "Metrics.Desk Breach Rate"}, "properties": {"fill": color(GREY)}}],
                          "valueAxis": [{"properties": {"start": lit(0.0), "end": lit(1.0)}}]}),
           title=f"Trend: {pc} breach rate vs whole desk, by week opened")
     p.add("groups", 646, 192, 610, 260,

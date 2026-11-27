@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Breach Rate"
                 }
               },
-              "queryRef": "Measures.Breach Rate",
+              "queryRef": "Metrics.Breach Rate",
               "nativeQueryRef": "Breach Rate",
               "displayName": "Breach rate"
             }

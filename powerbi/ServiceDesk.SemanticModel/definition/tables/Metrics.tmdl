@@ -1,5 +1,5 @@
-table Measures
-	lineageTag: 146451fd-8ff1-57c8-a877-a20d95dc53a4
+table Metrics
+	lineageTag: 310e86f1-9e94-50a6-a2f3-dd07ee6f585b
 
 	measure Tickets = COUNTROWS(Incident)
 		formatString: #,0
@@ -131,13 +131,13 @@ table Measures
 	column Placeholder
 		dataType: string
 		isHidden
-		lineageTag: 64d0b834-50a2-56a3-ad4b-989529a3ae39
+		lineageTag: 51eb95b1-1bce-5ac5-96ca-35832b7286e0
 		summarizeBy: none
 		sourceColumn: Placeholder
 
 		annotation SummarizationSetBy = Automatic
 
-	partition Measures = m
+	partition Metrics = m
 		mode: import
 		source =
 				#table(type table [Placeholder = text], {})

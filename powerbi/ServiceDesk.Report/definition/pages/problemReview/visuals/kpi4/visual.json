@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Median Resolution (h)"
                 }
               },
-              "queryRef": "Measures.Median Resolution (h)",
+              "queryRef": "Metrics.Median Resolution (h)",
               "nativeQueryRef": "Median Resolution (h)",
               "displayName": "Median hours to resolve"
             }

@@ -35,13 +35,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Tickets"
                 }
               },
-              "queryRef": "Measures.Tickets",
+              "queryRef": "Metrics.Tickets",
               "nativeQueryRef": "Tickets"
             },
             {
@@ -49,13 +49,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Median Resolution (h)"
                 }
               },
-              "queryRef": "Measures.Median Resolution (h)",
+              "queryRef": "Metrics.Median Resolution (h)",
               "nativeQueryRef": "Median Resolution (h)",
               "displayName": "Median h"
             },
@@ -64,13 +64,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Breach Rate"
                 }
               },
-              "queryRef": "Measures.Breach Rate",
+              "queryRef": "Metrics.Breach Rate",
               "nativeQueryRef": "Breach Rate",
               "displayName": "Breach rate"
             },
@@ -79,13 +79,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Reassignment Rate"
                 }
               },
-              "queryRef": "Measures.Reassignment Rate",
+              "queryRef": "Metrics.Reassignment Rate",
               "nativeQueryRef": "Reassignment Rate",
               "displayName": "Reassigned"
             }
@@ -99,7 +99,7 @@
               "Measure": {
                 "Expression": {
                   "SourceRef": {
-                    "Entity": "Measures"
+                    "Entity": "Metrics"
                   }
                 },
                 "Property": "Tickets"

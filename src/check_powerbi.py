@@ -39,7 +39,7 @@ def connect():
         for (db,) in dbs:
             c.ChangeDatabase(db)
             tables = [r[0] for r in rows(c, AdomdCommand, "SELECT [Name] FROM $SYSTEM.TMSCHEMA_TABLES")]
-            if "Incident" in tables and "Measures" in tables:
+            if "Incident" in tables and "Metrics" in tables:
                 return c, (AdomdCommand, db)
         c.Close()
     return None, None

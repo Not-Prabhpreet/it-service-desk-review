@@ -35,13 +35,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Tickets"
                 }
               },
-              "queryRef": "Measures.Tickets",
+              "queryRef": "Metrics.Tickets",
               "nativeQueryRef": "Tickets"
             },
             {
@@ -49,13 +49,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Tickets MoM %"
                 }
               },
-              "queryRef": "Measures.Tickets MoM %",
+              "queryRef": "Metrics.Tickets MoM %",
               "nativeQueryRef": "Tickets MoM %",
               "displayName": "Tickets MoM"
             },
@@ -64,13 +64,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "SLA %"
                 }
               },
-              "queryRef": "Measures.SLA %",
+              "queryRef": "Metrics.SLA %",
               "nativeQueryRef": "SLA %",
               "displayName": "SLA met %"
             },
@@ -79,13 +79,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "SLA % MoM (pts)"
                 }
               },
-              "queryRef": "Measures.SLA % MoM (pts)",
+              "queryRef": "Metrics.SLA % MoM (pts)",
               "nativeQueryRef": "SLA % MoM (pts)",
               "displayName": "SLA MoM (pts)"
             },
@@ -94,13 +94,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Median Resolution (h)"
                 }
               },
-              "queryRef": "Measures.Median Resolution (h)",
+              "queryRef": "Metrics.Median Resolution (h)",
               "nativeQueryRef": "Median Resolution (h)",
               "displayName": "Median h"
             },
@@ -109,13 +109,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Backlog"
                 }
               },
-              "queryRef": "Measures.Backlog",
+              "queryRef": "Metrics.Backlog",
               "nativeQueryRef": "Backlog",
               "displayName": "Backlog at month end"
             },
@@ -124,13 +124,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Backlog MoM"
                 }
               },
-              "queryRef": "Measures.Backlog MoM",
+              "queryRef": "Metrics.Backlog MoM",
               "nativeQueryRef": "Backlog MoM",
               "displayName": "Backlog MoM"
             }

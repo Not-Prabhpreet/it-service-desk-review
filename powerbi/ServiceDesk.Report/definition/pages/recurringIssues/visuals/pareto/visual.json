@@ -39,13 +39,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Ticket Share"
                 }
               },
-              "queryRef": "Measures.Ticket Share",
+              "queryRef": "Metrics.Ticket Share",
               "nativeQueryRef": "Ticket Share",
               "displayName": "% of tickets"
             }
@@ -58,13 +58,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Pareto Cumulative %"
                 }
               },
-              "queryRef": "Measures.Pareto Cumulative %",
+              "queryRef": "Metrics.Pareto Cumulative %",
               "nativeQueryRef": "Pareto Cumulative %",
               "displayName": "Cumulative %"
             }
@@ -78,7 +78,7 @@
               "Measure": {
                 "Expression": {
                   "SourceRef": {
-                    "Entity": "Measures"
+                    "Entity": "Metrics"
                   }
                 },
                 "Property": "Ticket Share"

@@ -35,13 +35,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Tickets"
                 }
               },
-              "queryRef": "Measures.Tickets",
+              "queryRef": "Metrics.Tickets",
               "nativeQueryRef": "Tickets"
             },
             {
@@ -49,13 +49,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "SLA %"
                 }
               },
-              "queryRef": "Measures.SLA %",
+              "queryRef": "Metrics.SLA %",
               "nativeQueryRef": "SLA %",
               "displayName": "SLA met %"
             },
@@ -64,13 +64,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Median Resolution (h)"
                 }
               },
-              "queryRef": "Measures.Median Resolution (h)",
+              "queryRef": "Metrics.Median Resolution (h)",
               "nativeQueryRef": "Median Resolution (h)",
               "displayName": "Median h"
             },
@@ -79,13 +79,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Reassignment Rate"
                 }
               },
-              "queryRef": "Measures.Reassignment Rate",
+              "queryRef": "Metrics.Reassignment Rate",
               "nativeQueryRef": "Reassignment Rate",
               "displayName": "Reassigned"
             },
@@ -94,13 +94,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Reopen Rate"
                 }
               },
-              "queryRef": "Measures.Reopen Rate",
+              "queryRef": "Metrics.Reopen Rate",
               "nativeQueryRef": "Reopen Rate",
               "displayName": "Reopened"
             }
@@ -114,7 +114,7 @@
               "Measure": {
                 "Expression": {
                   "SourceRef": {
-                    "Entity": "Measures"
+                    "Entity": "Metrics"
                   }
                 },
                 "Property": "SLA %"
@@ -183,7 +183,7 @@
           "Measure": {
             "Expression": {
               "SourceRef": {
-                "Entity": "Measures"
+                "Entity": "Metrics"
               }
             },
             "Property": "Tickets"
@@ -195,7 +195,7 @@
           "From": [
             {
               "Name": "m",
-              "Entity": "Measures",
+              "Entity": "Metrics",
               "Type": 0
             }
           ],

@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "First-line Resolution %"
                 }
               },
-              "queryRef": "Measures.First-line Resolution %",
+              "queryRef": "Metrics.First-line Resolution %",
               "nativeQueryRef": "First-line Resolution %",
               "displayName": "Resolved by first line (Group 70)"
             }

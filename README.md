@@ -6,6 +6,7 @@ A sample of service-desk analysis on a **real ServiceNow incident log**: 24,437 
 ## Try it
 
 - **Live service desk:** being set up. See [power-automate/](power-automate/).
+- **Dashboard PDF:** [powerbi/ServiceDesk.pdf](powerbi/ServiceDesk.pdf). Screenshots are below.
 
 ## The question
 
@@ -35,7 +36,13 @@ The "Incident management process enriched event log" from the UCI Machine Learni
 
 ## Dashboard
 
-Dashboard screenshots will appear here once exported. Meanwhile, the charts in [docs/figures/](docs/figures/) come from the same numbers.
+![01 service overview](powerbi/screenshots/01_service_overview.png)
+
+![02 sla resolution](powerbi/screenshots/02_sla_resolution.png)
+
+![03 recurring issues](powerbi/screenshots/03_recurring_issues.png)
+
+![04 problem review](powerbi/screenshots/04_problem_review.png)
 
 ## Files
 

@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Reopen Rate"
                 }
               },
-              "queryRef": "Measures.Reopen Rate",
+              "queryRef": "Metrics.Reopen Rate",
               "nativeQueryRef": "Reopen Rate",
               "displayName": "Reopen rate"
             }

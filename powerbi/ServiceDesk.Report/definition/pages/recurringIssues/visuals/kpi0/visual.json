@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Top 5 Category Share"
                 }
               },
-              "queryRef": "Measures.Top 5 Category Share",
+              "queryRef": "Metrics.Top 5 Category Share",
               "nativeQueryRef": "Top 5 Category Share",
               "displayName": "Top 5 categories' share of tickets"
             }

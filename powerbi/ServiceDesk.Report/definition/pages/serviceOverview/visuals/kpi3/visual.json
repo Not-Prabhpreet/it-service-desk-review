@@ -20,13 +20,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Reassignment Rate"
                 }
               },
-              "queryRef": "Measures.Reassignment Rate",
+              "queryRef": "Metrics.Reassignment Rate",
               "nativeQueryRef": "Reassignment Rate",
               "displayName": "Reassignment rate"
             }

@@ -39,13 +39,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Breach Rate"
                 }
               },
-              "queryRef": "Measures.Breach Rate",
+              "queryRef": "Metrics.Breach Rate",
               "nativeQueryRef": "Breach Rate",
               "displayName": "Category 46 breach rate"
             },
@@ -54,13 +54,13 @@
                 "Measure": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Measures"
+                      "Entity": "Metrics"
                     }
                   },
                   "Property": "Desk Breach Rate"
                 }
               },
-              "queryRef": "Measures.Desk Breach Rate",
+              "queryRef": "Metrics.Desk Breach Rate",
               "nativeQueryRef": "Desk Breach Rate",
               "displayName": "Whole desk breach rate"
             }
@@ -73,7 +73,7 @@
       "dataPoint": [
         {
           "selector": {
-            "metadata": "Measures.Breach Rate"
+            "metadata": "Metrics.Breach Rate"
           },
           "properties": {
             "fill": {
@@ -91,7 +91,7 @@
         },
         {
           "selector": {
-            "metadata": "Measures.Desk Breach Rate"
+            "metadata": "Metrics.Desk Breach Rate"
           },
           "properties": {
             "fill": {
