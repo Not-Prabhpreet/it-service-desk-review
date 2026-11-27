@@ -97,11 +97,11 @@ def tables_spec():
                     "        REMOVEFILTERS('Date'),\n        Incident[opened_date] <= d,\n"
                     "        ISBLANK(Incident[resolved_date]) || Incident[resolved_date] > d\n    )", "#,0"),
         ("Tickets Prev Month", "CALCULATE([Tickets], DATEADD('Date'[date], -1, MONTH))", "#,0"),
-        ("Tickets MoM %", "\nVAR p = [Tickets Prev Month]\nRETURN IF(NOT ISBLANK(p), DIVIDE([Tickets] - p, p))", "+0.0%;-0.0%;0.0%"),
+        ("Tickets MoM %", "\nVAR p = [Tickets Prev Month]\nRETURN IF(HASONEVALUE('Date'[month_start]) && NOT ISBLANK(p), DIVIDE([Tickets] - p, p))", "+0.0%;-0.0%;0.0%"),
         ("SLA % Prev Month", "CALCULATE([SLA %], DATEADD('Date'[date], -1, MONTH))", "0.0%"),
-        ("SLA % MoM (pts)", "\nVAR p = [SLA % Prev Month]\nRETURN IF(NOT ISBLANK(p), ([SLA %] - p) * 100)", "+0.0;-0.0;0.0"),
+        ("SLA % MoM (pts)", "\nVAR p = [SLA % Prev Month]\nRETURN IF(HASONEVALUE('Date'[month_start]) && NOT ISBLANK(p), ([SLA %] - p) * 100)", "+0.0;-0.0;0.0"),
         ("Backlog MoM", "\nVAR p = CALCULATE([Backlog], DATEADD('Date'[date], -1, MONTH))\n"
-                        "RETURN IF(NOT ISBLANK(p), [Backlog] - p)", "+#,0;-#,0;0"),
+                        "RETURN IF(HASONEVALUE('Date'[month_start]) && NOT ISBLANK(p), [Backlog] - p)", "+#,0;-#,0;0"),
         ("Ticket Share", "DIVIDE([Tickets], CALCULATE([Tickets], REMOVEFILTERS(Category)))", "0.0%"),
         ("Breach Share", "DIVIDE([SLA Breaches], CALCULATE([SLA Breaches], REMOVEFILTERS(Category)))", "0.0%"),
         ("Pareto Cumulative %", "\nVAR cur = [Tickets]\nVAR tbl = ADDCOLUMNS(ALL(Category[category]), \"@t\", [Tickets])\n"
@@ -113,7 +113,7 @@ def tables_spec():
         ("Knowledge Use %", 'DIVIDE(CALCULATE([Tickets], Incident[knowledge_used] = "Yes"), [Tickets])', "0.0%"),
         ("Awaiting User %", "DIVIDE(CALCULATE([Tickets], Incident[awaiting_user_events] > 0), [Tickets])", "0.0%"),
         ("Problem Category", f'"{cat}"', None),
-        ("Change", "SUM(Projection[after]) - SUM(Projection[before])", "+#,0.0;-#,0.0;0.0"),
+        ("Change", "IF(HASONEVALUE(Projection[metric]), SUM(Projection[after]) - SUM(Projection[before]))", "+#,0.0;-#,0.0;0.0"),
     ]
     return T, M
 
@@ -175,7 +175,6 @@ def tmdl_measures(measures):
 
 RELATIONSHIPS = [
     ("Incident", "opened_date", "Date", "date", True),
-    ("Incident", "resolved_date", "Date", "date", False),
     ("Incident", "category", "Category", "category", True),
     ("Incident", "priority", "Priority", "priority", True),
     ("Incident", "assignment_group", "Assignment Group", "assignment_group", True),
@@ -487,7 +486,8 @@ def build_pages(metrics):
           chart("tableEx", {"Values": [proj(C("Projection", "metric"), "Measure"),
                                        proj(C("Projection", "before"), "Before"),
                                        proj(C("Projection", "after"), "After (projected)"), proj(Mx("Change"))]},
-                sort=[(C("Projection", "metric"), "Ascending")]),
+                sort=[(C("Projection", "metric"), "Ascending")],
+                objects={"total": [{"properties": {"totals": lit(False)}}]}),
           title=f"Before / after: {pc} first-line resolution raised to the desk rate ({sc['target_share']}%)")
     p.add("recommendation", 646, 464, 610, 244, textbox([
         ("Recommendation", 12, True, "#1F3A5F"),

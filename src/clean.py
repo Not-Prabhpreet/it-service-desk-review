@@ -2,7 +2,7 @@
 
 Outputs (data/clean/):
   fact_incident.csv          one row per incident in the reporting window
-  dim_date.csv               calendar for the window (+ resolve tail)
+  dim_date.csv               calendar for the reporting window
   dim_category.csv, dim_priority.csv, dim_assignment_group.csv
   cleaning_log.json          every count quoted in docs/data_notes.md
 """

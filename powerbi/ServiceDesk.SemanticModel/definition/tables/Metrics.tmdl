@@ -67,7 +67,7 @@ table Metrics
 
 	measure 'Tickets MoM %' =
 			VAR p = [Tickets Prev Month]
-			RETURN IF(NOT ISBLANK(p), DIVIDE([Tickets] - p, p))
+			RETURN IF(HASONEVALUE('Date'[month_start]) && NOT ISBLANK(p), DIVIDE([Tickets] - p, p))
 		formatString: +0.0%;-0.0%;0.0%
 		lineageTag: 62923498-edce-588c-b8dd-e8a90aaf1af0
 
@@ -77,13 +77,13 @@ table Metrics
 
 	measure 'SLA % MoM (pts)' =
 			VAR p = [SLA % Prev Month]
-			RETURN IF(NOT ISBLANK(p), ([SLA %] - p) * 100)
+			RETURN IF(HASONEVALUE('Date'[month_start]) && NOT ISBLANK(p), ([SLA %] - p) * 100)
 		formatString: +0.0;-0.0;0.0
 		lineageTag: cc08ac55-e933-53d0-bbdb-bf46659b1855
 
 	measure 'Backlog MoM' =
 			VAR p = CALCULATE([Backlog], DATEADD('Date'[date], -1, MONTH))
-			RETURN IF(NOT ISBLANK(p), [Backlog] - p)
+			RETURN IF(HASONEVALUE('Date'[month_start]) && NOT ISBLANK(p), [Backlog] - p)
 		formatString: +#,0;-#,0;0
 		lineageTag: a1c80ab8-b256-5488-aae0-aee2ba2d9437
 
@@ -124,7 +124,7 @@ table Metrics
 	measure 'Problem Category' = "Category 46"
 		lineageTag: 750fe0a3-8ab0-5ebd-822d-c8237cc52acd
 
-	measure Change = SUM(Projection[after]) - SUM(Projection[before])
+	measure Change = IF(HASONEVALUE(Projection[metric]), SUM(Projection[after]) - SUM(Projection[before]))
 		formatString: +#,0.0;-#,0.0;0.0
 		lineageTag: 08b21c85-833d-514a-8fe6-cffca056ca19
 

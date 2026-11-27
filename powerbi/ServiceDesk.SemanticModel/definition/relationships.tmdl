@@ -2,11 +2,6 @@ relationship 37444417-bfd3-5209-b429-5e6d465bef60
 	fromColumn: Incident.opened_date
 	toColumn: Date.date
 
-relationship b7bb32fb-ba64-55f6-83ed-6dbb97c3af65
-	isActive: false
-	fromColumn: Incident.resolved_date
-	toColumn: Date.date
-
 relationship 45597c7f-3f32-5f35-85ab-d919dd9d027d
 	fromColumn: Incident.category
 	toColumn: Category.category
